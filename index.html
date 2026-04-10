@@ -1,203 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toyota Hasan</title>
-
-    <!-- Including Three.js library for 3D rendering -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
+    <title>Toyota Hasan | Premium Toyota Dealership</title>
+    <meta name="description" content="Toyota Hasan - Authorized Toyota Dealership offering premium vehicles, exceptional service, and world-class customer experience.">
+    
+    <!-- Three.js for 3D Model -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    
     <style>
-        /* Basic reset */
+        :root {
+            --primary: #E60012;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --gray: #555555;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Body and overall styling */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
             color: #333;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
         }
 
+        /* Navigation */
         header {
-            background-color: #111;
-            color: #fff;
-            padding: 20px 0;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        header nav ul {
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
             list-style: none;
+            gap: 40px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 17px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        #home {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1609521263047-6f8e0d6c2c1d?ixlib=rb-4.0.3&auto=format&fit=crop&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero-content p {
+            font-size: 1.4rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(230, 0, 18, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(230, 0, 18, 0.4);
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.25rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        /* About Section */
+        #about {
+            background-color: white;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 40px;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+        }
+
+        .about-text p {
+            font-size: 1.15rem;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        /* Models Section */
+        #models {
+            background-color: #f8f9fa;
+        }
+
+        .models-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .car-3d-container {
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            height: 520px;
+            position: relative;
+        }
+
+        #car-3d {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Contact Section */
+        #contact {
+            background: white;
+        }
+
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .contact-info {
             display: flex;
             justify-content: center;
+            gap: 60px;
+            margin-top: 50px;
+            flex-wrap: wrap;
         }
 
-        header nav ul li {
-            margin: 0 20px;
+        .contact-item {
+            font-size: 1.2rem;
         }
 
-        header nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        /* Hero section */
-        #home .hero {
-            text-align: center;
-            padding: 100px 0;
-            background-color: #333;
-            color: white;
-        }
-
-        #home .hero h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        #home .hero p {
-            font-size: 20px;
-        }
-
-        /* About section */
-        #about .content {
-            padding: 50px;
-            background-color: #fff;
-            text-align: center;
-        }
-
-        #about .content h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        /* Models section */
-        #models .content {
-            padding: 50px;
-            background-color: #eee;
-            text-align: center;
-        }
-
-        #models .content h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        #models .content .car-3d {
-            width: 100%;
-            height: 400px;
-            background-color: #000;
-        }
-
-        /* Contact section */
-        #contact .content {
-            padding: 50px;
-            background-color: #fff;
-            text-align: center;
+        .contact-item strong {
+            display: block;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
         }
 
         /* Footer */
         footer {
-            background-color: #111;
-            color: #fff;
+            background-color: var(--dark);
+            color: white;
             text-align: center;
-            padding: 20px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            padding: 40px 20px;
+        }
+
+        footer p {
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 20px;
+            }
+            .section-title {
+                font-size: 2.3rem;
+            }
         }
     </style>
 </head>
-
 <body>
-    <!-- Navigation Menu -->
+
+    <!-- Navigation -->
     <header>
         <nav>
+            <a href="#" class="logo">TOYOTA <span>HASAN</span></a>
             <ul>
                 <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#models">Models</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#models">Our Models</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Main Content -->
+    <!-- Hero Section -->
     <section id="home">
-        <div class="hero">
-            <h1>Welcome to Toyota Hasan</h1>
-            <p>Explore the finest Toyota models and 3D experiences</p>
+        <div class="hero-content">
+            <h1>Drive Excellence.<br>Experience Toyota.</h1>
+            <p>Premium Toyota vehicles with unmatched reliability, innovation, and world-class service.</p>
+            <a href="#models" class="btn">Explore Models</a>
         </div>
     </section>
 
+    <!-- About Section -->
     <section id="about">
-        <div class="content">
-            <h2>About Us</h2>
-            <p>Toyota Hasan is dedicated to providing the best Toyota models with premium customer service.</p>
+        <div class="about-grid">
+            <div class="about-text">
+                <h3>Welcome to Toyota Hasan</h3>
+                <p>Toyota Hasan is a premier authorized Toyota dealership committed to delivering exceptional automotive experiences. With a passion for quality and customer satisfaction, we offer the complete range of Toyota vehicles backed by expert service and genuine parts.</p>
+                <p>Our state-of-the-art facility and highly trained team ensure that every customer receives personalized attention and the highest standards of professionalism.</p>
+            </div>
+            <div>
+                <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&q=80" alt="Toyota Dealership" style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            </div>
         </div>
     </section>
 
+    <!-- Models Section -->
     <section id="models">
-        <div class="content">
-            <h2>Our Models</h2>
-            <p>Explore our exclusive Toyota models available for purchase.</p>
-            <!-- Placeholder for 3D Car -->
-            <div id="car-3d" class="car-3d"></div>
+        <div class="models-container">
+            <h2 class="section-title">Featured Models</h2>
+            <p class="section-subtitle">Discover our latest Toyota lineup with stunning 3D visualization</p>
+            
+            <div class="car-3d-container">
+                <div id="car-3d"></div>
+            </div>
         </div>
     </section>
 
+    <!-- Contact Section -->
     <section id="contact">
-        <div class="content">
-            <h2>Contact Us</h2>
-            <p>Email: contact@toyotahasan.com</p>
-            <p>Phone: 123-456-7890</p>
+        <div class="contact-content">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Visit us today or reach out for more information about our vehicles and services.</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <strong>Address</strong>
+                    123 Toyota Boulevard<br>
+                    Karachi, Pakistan
+                </div>
+                <div class="contact-item">
+                    <strong>Phone</strong>
+                    +92 300 1234567<br>
+                    +92 21 34567890
+                </div>
+                <div class="contact-item">
+                    <strong>Email</strong>
+                    info@toyotahasan.com<br>
+                    sales@toyotahasan.com
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Toyota Hasan. All rights reserved.</p>
+        <p>&copy; 2026 Toyota Hasan. All Rights Reserved. | Authorized Toyota Dealership</p>
     </footer>
 
-    <!-- JavaScript for 3D Car -->
     <script>
-        // Setting up the scene
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById("car-3d").appendChild(renderer.domElement);
+        // Three.js Setup
+        let scene, camera, renderer;
+        let carModel;
 
-        // Adding lighting
-        const light = new THREE.PointLight(0xFFFFFF);
-        light.position.set(10, 10, 10);
-        scene.add(light);
+        function init3D() {
+            const container = document.getElementById('car-3d');
+            
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x111111);
 
-        // Creating a simple 3D cube (replace with your 3D car model)
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+            // Camera
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 3, 8);
 
-        camera.position.z = 5;
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
 
-        // Animating the scene
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(10, 10, 5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            const pointLight = new THREE.PointLight(0xffaa66, 1, 100);
+            pointLight.position.set(-10, 5, -10);
+            scene.add(pointLight);
+
+            // Simple professional car body (box + details)
+            createCarModel();
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            });
+
+            animate();
+        }
+
+        function createCarModel() {
+            // Car body
+            const bodyGeometry = new THREE.BoxGeometry(4.2, 1.4, 2);
+            const bodyMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xE60012, 
+                shininess: 80,
+                specular: 0x222222
+            });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 1.2;
+            body.castShadow = true;
+            body.receiveShadow = true;
+            scene.add(body);
+
+            // Cabin
+            const cabinGeometry = new THREE.BoxGeometry(2.2, 1.1, 1.6);
+            const cabinMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x222222,
+                shininess: 30
+            });
+            const cabin = new THREE.Mesh(cabinGeometry, cabinMaterial);
+            cabin.position.set(-0.4, 2.1, 0);
+            scene.add(cabin);
+
+            // Wheels
+            const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x111111 });
+            const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.4, 32);
+
+            const wheel1 = new THREE.Mesh(wheelGeometry, wheelMaterial);
+            wheel1.rotation.z = Math.PI / 2;
+            wheel1.position.set(1.4, 0.6, 1.1);
+            scene.add(wheel1);
+
+            const wheel2 = wheel1.clone();
+            wheel2.position.z = -1.1;
+            scene.add(wheel2);
+
+            const wheel3 = wheel1.clone();
+            wheel3.position.x = -1.6;
+            scene.add(wheel3);
+
+            const wheel4 = wheel3.clone();
+            wheel4.position.z = -1.1;
+            scene.add(wheel4);
+
+            carModel = new THREE.Group();
+            carModel.add(body, cabin, wheel1, wheel2, wheel3, wheel4);
+            scene.add(carModel);
+        }
+
         function animate() {
             requestAnimationFrame(animate);
-
-            // Rotate the car (or cube in this case)
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-
+            
+            if (carModel) {
+                carModel.rotation.y += 0.003;
+            }
+            
             renderer.render(scene, camera);
         }
 
-        animate();
+        // Initialize everything when page loads
+        window.onload = function() {
+            init3D();
+        };
     </script>
 </body>
-
-  </html>
+</html>
