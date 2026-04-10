@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Hasan</title>
+
+    <!-- Including Three.js library for 3D rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and overall styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #111;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        header nav ul li {
+            margin: 0 20px;
+        }
+
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        /* Hero section */
+        #home .hero {
+            text-align: center;
+            padding: 100px 0;
+            background-color: #333;
+            color: white;
+        }
+
+        #home .hero h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        #home .hero p {
+            font-size: 20px;
+        }
+
+        /* About section */
+        #about .content {
+            padding: 50px;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        #about .content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        /* Models section */
+        #models .content {
+            padding: 50px;
+            background-color: #eee;
+            text-align: center;
+        }
+
+        #models .content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        #models .content .car-3d {
+            width: 100%;
+            height: 400px;
+            background-color: #000;
+        }
+
+        /* Contact section */
+        #contact .content {
+            padding: 50px;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Menu -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <section id="home">
+        <div class="hero">
+            <h1>Welcome to Toyota Hasan</h1>
+            <p>Explore the finest Toyota models and 3D experiences</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="content">
+            <h2>About Us</h2>
+            <p>Toyota Hasan is dedicated to providing the best Toyota models with premium customer service.</p>
+        </div>
+    </section>
+
+    <section id="models">
+        <div class="content">
+            <h2>Our Models</h2>
+            <p>Explore our exclusive Toyota models available for purchase.</p>
+            <!-- Placeholder for 3D Car -->
+            <div id="car-3d" class="car-3d"></div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="content">
+            <h2>Contact Us</h2>
+            <p>Email: contact@toyotahasan.com</p>
+            <p>Phone: 123-456-7890</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Toyota Hasan. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for 3D Car -->
+    <script>
+        // Setting up the scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById("car-3d").appendChild(renderer.domElement);
+
+        // Adding lighting
+        const light = new THREE.PointLight(0xFFFFFF);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+
+        // Creating a simple 3D cube (replace with your 3D car model)
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        camera.position.z = 5;
+
+        // Animating the scene
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate the car (or cube in this case)
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+  </html>
