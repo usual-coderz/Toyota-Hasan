@@ -1,471 +1,640 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toyota Hasan | Premium Toyota Dealership</title>
-    <meta name="description" content="Toyota Hasan - Authorized Toyota Dealership offering premium vehicles, exceptional service, and world-class customer experience.">
-    
-    <!-- Three.js for 3D Model -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Dashboard</title>
     <style>
-        :root {
-            --primary: #E60012;
-            --dark: #1A1A1A;
-            --light: #F8F9FA;
-            --gray: #555555;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
         }
 
-        /* Navigation */
-        header {
-            background-color: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
+        /* --- LOGIN PAGE --- */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+        }
+        .login-container h1 {
+            font-size: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #1a1a2e;
+        }
+        .login-container .input-group {
+            margin-bottom: 16px;
+        }
+        .login-container .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .login-container .input-group input {
             width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .login-container .input-group input:focus {
+            border-color: #667eea;
+        }
+        .login-container .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 8px;
+        }
+        .login-container .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        .login-error {
+            color: #C62828;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
         }
 
-        nav {
-            max-width: 1400px;
+        /* --- ADMIN PANEL --- */
+        .admin-container {
+            max-width: 960px;
             margin: 0 auto;
-            padding: 0 40px;
+            padding: 24px;
+            display: none;
+        }
+        .admin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 80px;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e0e0e0;
         }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-            text-decoration: none;
+        .admin-header h1 {
+            font-size: 22px;
+            color: #1a1a2e;
+        }
+        .header-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 16px;
         }
-
-        .logo span {
-            color: var(--primary);
+        .header-right .logged-as {
+            font-size: 13px;
+            color: #888;
         }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 40px;
+        .header-right .logged-as strong {
+            color: #1a1a2e;
         }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 17px;
-            transition: color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: var(--primary);
-        }
-
-        /* Hero Section */
-        #home {
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1609521263047-6f8e0d6c2c1d?ixlib=rb-4.0.3&auto=format&fit=crop&q=80') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            padding: 0 20px;
-        }
-
-        .hero-content h1 {
-            font-size: 4.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            line-height: 1.1;
-        }
-
-        .hero-content p {
-            font-size: 1.4rem;
-            margin-bottom: 40px;
-            opacity: 0.95;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--primary);
-            color: white;
-            padding: 16px 40px;
-            border-radius: 50px;
-            font-size: 1.1rem;
+        .header-right .logout-btn {
+            padding: 8px 18px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
             font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(230, 0, 18, 0.3);
+            color: #444;
+            transition: background 0.2s;
+        }
+        .header-right .logout-btn:hover {
+            background: #ccc;
         }
 
-        .btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(230, 0, 18, 0.4);
-        }
-
-        /* Sections */
-        section {
-            padding: 100px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.25rem;
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto 60px;
-        }
-
-        /* About Section */
-        #about {
-            background-color: white;
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 40px;
-            align-items: center;
-        }
-
-        .about-text h3 {
-            font-size: 2rem;
-            margin-bottom: 25px;
-            color: var(--dark);
-        }
-
-        .about-text p {
-            font-size: 1.15rem;
-            color: #555;
-            margin-bottom: 25px;
-        }
-
-        /* Models Section */
-        #models {
-            background-color: #f8f9fa;
-        }
-
-        .models-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 40px;
-        }
-
-        .car-3d-container {
-            background: #111;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            height: 520px;
-            position: relative;
-        }
-
-        #car-3d {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Contact Section */
-        #contact {
+        /* --- POST FORM --- */
+        .post-form {
             background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 32px;
         }
-
-        .contact-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 0 20px;
+        .post-form h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #1a1a2e;
         }
-
-        .contact-info {
+        .post-form input[type="text"],
+        .post-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .post-form input:focus,
+        .post-form textarea:focus {
+            border-color: #667eea;
+        }
+        .post-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+        .post-form .form-row {
             display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin-top: 50px;
+            gap: 12px;
+            align-items: center;
             flex-wrap: wrap;
         }
-
-        .contact-item {
-            font-size: 1.2rem;
+        .post-form .form-row .publish-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
+        .post-form .form-row .publish-btn:hover {
+            transform: translateY(-2px);
+        }
+        .post-form .form-row .cancel-btn {
+            padding: 12px 20px;
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+        }
+        .post-form .form-row .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+        .form-status {
+            font-size: 14px;
+            margin-top: 12px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            display: none;
+        }
+        .form-status.show { display: block; }
+        .form-status.success { background: #E8F5E9; color: #2E7D32; }
+        .form-status.error { background: #FFEBEE; color: #C62828; }
 
-        .contact-item strong {
-            display: block;
-            color: var(--primary);
-            font-size: 1.1rem;
+        /* --- POSTS LIST --- */
+        .posts-section h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #1a1a2e;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 15px;
+        }
+        .post-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+            transition: box-shadow 0.2s;
+        }
+        .post-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .post-card .post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 8px;
         }
-
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
+        .post-card .post-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        .post-card .post-date {
+            font-size: 12px;
+            color: #aaa;
+            white-space: nowrap;
+            margin-left: 16px;
+            margin-top: 4px;
+        }
+        .post-card .post-content {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .post-card .post-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .post-card .post-actions button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .post-card .post-actions button:active {
+            transform: scale(0.96);
+        }
+        .post-card .post-actions .edit-btn {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        .post-card .post-actions .edit-btn:hover {
+            background: #BBDEFB;
+        }
+        .post-card .post-actions .delete-btn {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        .post-card .post-actions .delete-btn:hover {
+            background: #FFCDD2;
         }
 
-        footer p {
-            opacity: 0.8;
-            font-size: 1rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .hero-content h1 {
-                font-size: 3.5rem;
+        /* --- RESPONSIVE --- */
+        @media (max-width: 600px) {
+            .login-container {
+                margin: 40px 16px;
+                padding: 28px 20px;
             }
-            .about-grid {
-                grid-template-columns: 1fr;
-                gap: 50px;
+            .admin-container {
+                padding: 16px;
             }
-        }
-
-        @media (max-width: 768px) {
-            nav ul {
-                gap: 20px;
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
             }
-            .section-title {
-                font-size: 2.3rem;
+            .post-card .post-meta {
+                flex-direction: column;
+            }
+            .post-card .post-date {
+                margin-left: 0;
+                margin-top: 4px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <header>
-        <nav>
-            <a href="#" class="logo">TOYOTA <span>HASAN</span></a>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#models">Our Models</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="loginScreen" class="login-container">
+    <h1>Sign In</h1>
+    <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="Your username" autocomplete="off" />
+    </div>
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Your password" />
+    </div>
+    <button class="login-btn" id="loginBtn">Sign In</button>
+    <div class="login-error" id="loginError">Invalid credentials. Try again.</div>
+    <p style="margin-top:20px; font-size:12px; color:#bbb; text-align:center;">
+        Only authorized users can access this panel.
+    </p>
+</div>
 
-    <!-- Hero Section -->
-    <section id="home">
-        <div class="hero-content">
-            <h1>Drive Excellence.<br>Experience Toyota.</h1>
-            <p>Premium Toyota vehicles with unmatched reliability, innovation, and world-class service.</p>
-            <a href="#models" class="btn">Explore Models</a>
+<!-- ==================== ADMIN DASHBOARD ==================== -->
+<div id="adminPanel" class="admin-container">
+    <div class="admin-header">
+        <h1>My Dashboard</h1>
+        <div class="header-right">
+            <span class="logged-as">Logged in as <strong id="displayUser"></strong></span>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
         </div>
-    </section>
+    </div>
 
-    <!-- About Section -->
-    <section id="about">
-        <div class="about-grid">
-            <div class="about-text">
-                <h3>Welcome to Toyota Hasan</h3>
-                <p>Toyota Hasan is a premier authorized Toyota dealership committed to delivering exceptional automotive experiences. With a passion for quality and customer satisfaction, we offer the complete range of Toyota vehicles backed by expert service and genuine parts.</p>
-                <p>Our state-of-the-art facility and highly trained team ensure that every customer receives personalized attention and the highest standards of professionalism.</p>
-            </div>
-            <div>
-                <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&q=80" alt="Toyota Dealership" style="width:100%; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            </div>
+    <!-- POST FORM -->
+    <div class="post-form">
+        <h2 id="formTitle">New Post</h2>
+        <input type="text" id="postTitle" placeholder="Post title" />
+        <textarea id="postContent" placeholder="Write your content here..."></textarea>
+        <div class="form-row">
+            <button class="publish-btn" id="publishBtn">Publish</button>
+            <button class="cancel-btn" id="cancelEditBtn">Cancel</button>
         </div>
-    </section>
+        <div class="form-status" id="formStatus"></div>
+    </div>
 
-    <!-- Models Section -->
-    <section id="models">
-        <div class="models-container">
-            <h2 class="section-title">Featured Models</h2>
-            <p class="section-subtitle">Discover our latest Toyota lineup with stunning 3D visualization</p>
-            
-            <div class="car-3d-container">
-                <div id="car-3d"></div>
-            </div>
-        </div>
-    </section>
+    <!-- POSTS LIST -->
+    <div class="posts-section">
+        <h2>All Posts</h2>
+        <div id="postsList"></div>
+    </div>
+</div>
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="contact-content">
-            <h2 class="section-title">Get In Touch</h2>
-            <p class="section-subtitle">Visit us today or reach out for more information about our vehicles and services.</p>
-            
-            <div class="contact-info">
-                <div class="contact-item">
-                    <strong>Address</strong>
-                    123 Toyota Boulevard<br>
-                    Karachi, Pakistan
-                </div>
-                <div class="contact-item">
-                    <strong>Phone</strong>
-                    +92 300 1234567<br>
-                    +92 21 34567890
-                </div>
-                <div class="contact-item">
-                    <strong>Email</strong>
-                    info@toyotahasan.com<br>
-                    sales@toyotahasan.com
-                </div>
-            </div>
-        </div>
-    </section>
+<script>
+// ============================================================
+// SINGLE-FILE CMS — Only you can post
+// ============================================================
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Toyota Hasan. All Rights Reserved. | Authorized Toyota Dealership</p>
-    </footer>
+// --- CONFIGURATION (CHANGE THESE) ---
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'yourpassword123';
 
-    <script>
-        // Three.js Setup
-        let scene, camera, renderer;
-        let carModel;
+// --- STATE ---
+let posts = [];
+let editingId = null;
+let isLoggedIn = false;
 
-        function init3D() {
-            const container = document.getElementById('car-3d');
-            
-            // Scene setup
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x111111);
+// --- DOM REFS ---
+const loginScreen = document.getElementById('loginScreen');
+const adminPanel = document.getElementById('adminPanel');
+const loginUser = document.getElementById('loginUser');
+const loginPass = document.getElementById('loginPass');
+const loginBtn = document.getElementById('loginBtn');
+const loginError = document.getElementById('loginError');
+const displayUser = document.getElementById('displayUser');
+const logoutBtn = document.getElementById('logoutBtn');
+const formTitle = document.getElementById('formTitle');
+const postTitle = document.getElementById('postTitle');
+const postContent = document.getElementById('postContent');
+const publishBtn = document.getElementById('publishBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const formStatus = document.getElementById('formStatus');
+const postsList = document.getElementById('postsList');
 
-            // Camera
-            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 3, 8);
+// ============================================================
+// LOCAL STORAGE HELPERS
+// ============================================================
+function loadPosts() {
+    try {
+        const data = localStorage.getItem('my_posts');
+        posts = data ? JSON.parse(data) : [];
+    } catch (e) {
+        posts = [];
+    }
+}
 
-            // Renderer
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.shadowMap.enabled = true;
-            container.appendChild(renderer.domElement);
+function savePosts() {
+    localStorage.setItem('my_posts', JSON.stringify(posts));
+}
 
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(10, 10, 5);
-            directionalLight.castShadow = true;
-            scene.add(directionalLight);
-
-            const pointLight = new THREE.PointLight(0xffaa66, 1, 100);
-            pointLight.position.set(-10, 5, -10);
-            scene.add(pointLight);
-
-            // Simple professional car body (box + details)
-            createCarModel();
-
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                const width = container.clientWidth;
-                const height = container.clientHeight;
-                camera.aspect = width / height;
-                camera.updateProjectionMatrix();
-                renderer.setSize(width, height);
-            });
-
-            animate();
+function loadSession() {
+    try {
+        const session = localStorage.getItem('my_session');
+        if (session === ADMIN_USER) {
+            isLoggedIn = true;
         }
+    } catch (e) {
+        // ignore
+    }
+}
 
-        function createCarModel() {
-            // Car body
-            const bodyGeometry = new THREE.BoxGeometry(4.2, 1.4, 2);
-            const bodyMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0xE60012, 
-                shininess: 80,
-                specular: 0x222222
-            });
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.position.y = 1.2;
-            body.castShadow = true;
-            body.receiveShadow = true;
-            scene.add(body);
+function saveSession() {
+    localStorage.setItem('my_session', ADMIN_USER);
+}
 
-            // Cabin
-            const cabinGeometry = new THREE.BoxGeometry(2.2, 1.1, 1.6);
-            const cabinMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x222222,
-                shininess: 30
-            });
-            const cabin = new THREE.Mesh(cabinGeometry, cabinMaterial);
-            cabin.position.set(-0.4, 2.1, 0);
-            scene.add(cabin);
+function clearSession() {
+    localStorage.removeItem('my_session');
+}
 
-            // Wheels
-            const wheelMaterial = new THREE.MeshPhongMaterial({ color: 0x111111 });
-            const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.4, 32);
+// ============================================================
+// UI HELPERS
+// ============================================================
+function showLogin() {
+    loginScreen.style.display = 'block';
+    adminPanel.style.display = 'none';
+}
 
-            const wheel1 = new THREE.Mesh(wheelGeometry, wheelMaterial);
-            wheel1.rotation.z = Math.PI / 2;
-            wheel1.position.set(1.4, 0.6, 1.1);
-            scene.add(wheel1);
+function showAdmin() {
+    loginScreen.style.display = 'none';
+    adminPanel.style.display = 'block';
+}
 
-            const wheel2 = wheel1.clone();
-            wheel2.position.z = -1.1;
-            scene.add(wheel2);
+function setFormStatus(msg, type) {
+    formStatus.textContent = msg;
+    formStatus.className = 'form-status show ' + type;
+    setTimeout(() => {
+        formStatus.className = 'form-status';
+    }, 4000);
+}
 
-            const wheel3 = wheel1.clone();
-            wheel3.position.x = -1.6;
-            scene.add(wheel3);
+function resetForm() {
+    postTitle.value = '';
+    postContent.value = '';
+    editingId = null;
+    formTitle.textContent = 'New Post';
+    publishBtn.textContent = 'Publish';
+    cancelEditBtn.style.display = 'none';
+}
 
-            const wheel4 = wheel3.clone();
-            wheel4.position.z = -1.1;
-            scene.add(wheel4);
+function populateForm(id) {
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    postTitle.value = post.title;
+    postContent.value = post.content;
+    editingId = id;
+    formTitle.textContent = 'Edit Post';
+    publishBtn.textContent = 'Update';
+    cancelEditBtn.style.display = 'inline-block';
+    postTitle.focus();
+}
 
-            carModel = new THREE.Group();
-            carModel.add(body, cabin, wheel1, wheel2, wheel3, wheel4);
-            scene.add(carModel);
-        }
+// ============================================================
+// RENDER POSTS
+// ============================================================
+function renderPosts() {
+    if (posts.length === 0) {
+        postsList.innerHTML = `
+            <div class="empty-state">
+                <p style="font-size: 40px; margin-bottom: 12px;">📝</p>
+                <p>No posts yet. Write your first one above.</p>
+            </div>
+        `;
+        return;
+    }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            if (carModel) {
-                carModel.rotation.y += 0.003;
-            }
-            
-            renderer.render(scene, camera);
-        }
+    // Show newest first
+    const sorted = [...posts].sort((a, b) => b.createdAt - a.createdAt);
 
-        // Initialize everything when page loads
-        window.onload = function() {
-            init3D();
-        };
-    </script>
+    let html = '';
+    for (const post of sorted) {
+        const date = new Date(post.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+        html += `
+            <div class="post-card" data-id="${post.id}">
+                <div class="post-meta">
+                    <div class="post-title">${escapeHtml(post.title)}</div>
+                    <div class="post-date">${date}</div>
+                </div>
+                <div class="post-content">${escapeHtml(post.content)}</div>
+                <div class="post-actions">
+                    <button class="edit-btn" onclick="editPost('${post.id}')">Edit</button>
+                    <button class="delete-btn" onclick="deletePost('${post.id}')">Delete</button>
+                </div>
+            </div>
+        `;
+    }
+    postsList.innerHTML = html;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ============================================================
+// CRUD OPERATIONS
+// ============================================================
+function createPost(title, content) {
+    const post = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        title: title.trim(),
+        content: content.trim(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+    };
+    posts.push(post);
+    savePosts();
+    renderPosts();
+    resetForm();
+    setFormStatus('Post published successfully.', 'success');
+}
+
+function updatePost(id, title, content) {
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    post.title = title.trim();
+    post.content = content.trim();
+    post.updatedAt = Date.now();
+    savePosts();
+    renderPosts();
+    resetForm();
+    setFormStatus('Post updated successfully.', 'success');
+}
+
+function deletePost(id) {
+    if (!confirm('Delete this post permanently?')) return;
+    posts = posts.filter(p => p.id !== id);
+    savePosts();
+    renderPosts();
+    if (editingId === id) resetForm();
+}
+
+function editPost(id) {
+    populateForm(id);
+    adminPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Make editPost/deletePost globally accessible
+window.editPost = editPost;
+window.deletePost = deletePost;
+
+// ============================================================
+// EVENT HANDLERS
+// ============================================================
+
+// --- LOGIN ---
+loginBtn.addEventListener('click', function() {
+    const user = loginUser.value.trim();
+    const pass = loginPass.value.trim();
+
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        isLoggedIn = true;
+        saveSession();
+        displayUser.textContent = user;
+        showAdmin();
+        initApp();
+        loginError.style.display = 'none';
+        loginUser.value = '';
+        loginPass.value = '';
+    } else {
+        loginError.style.display = 'block';
+        loginPass.value = '';
+        loginPass.focus();
+    }
+});
+
+// Enter key on password field
+loginPass.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') loginBtn.click();
+});
+loginUser.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') loginPass.focus();
+});
+
+// --- LOGOUT ---
+logoutBtn.addEventListener('click', function() {
+    isLoggedIn = false;
+    clearSession();
+    resetForm();
+    showLogin();
+});
+
+// --- PUBLISH / UPDATE ---
+publishBtn.addEventListener('click', function() {
+    const title = postTitle.value.trim();
+    const content = postContent.value.trim();
+
+    if (!title) {
+        setFormStatus('Please enter a title.', 'error');
+        postTitle.focus();
+        return;
+    }
+    if (!content) {
+        setFormStatus('Please write some content.', 'error');
+        postContent.focus();
+        return;
+    }
+
+    if (editingId) {
+        updatePost(editingId, title, content);
+    } else {
+        createPost(title, content);
+    }
+});
+
+// --- CANCEL EDIT ---
+cancelEditBtn.addEventListener('click', resetForm);
+
+// ============================================================
+// INIT
+// ============================================================
+function initApp() {
+    loadPosts();
+    renderPosts();
+    resetForm();
+}
+
+// Check existing session on load
+loadSession();
+if (isLoggedIn) {
+    displayUser.textContent = ADMIN_USER;
+    showAdmin();
+    initApp();
+} else {
+    showLogin();
+}
+</script>
 </body>
 </html>
