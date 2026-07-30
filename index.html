@@ -1,1197 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FUSION SERVER 3.3 — Quantum Trading Technology</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <style>
-        /* ========== RESET & BASE ========== */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #050816;
-            --bg-card: rgba(11, 18, 38, 0.65);
-            --blue: #3B82F6;
-            --blue-glow: rgba(59, 130, 246, 0.35);
-            --green: #00FF88;
-            --green-glow: rgba(0, 255, 136, 0.35);
-            --text: #FFFFFF;
-            --text-secondary: #94A3B8;
-            --border-glass: rgba(59, 130, 246, 0.12);
-            --radius: 16px;
-            --shadow-card: 0 8px 48px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(59, 130, 246, 0.06);
-        }
-
-        html,
-        body {
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text);
-            overflow: hidden;
-        }
-
-        /* ========== MATRIX CANVAS ========== */
-        #matrix-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.12;
-            pointer-events: none;
-        }
-
-        /* ========== PARTICLES CANVAS ========== */
-        #particles-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* ========== GRID OVERLAY ========== */
-        .grid-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
-            background-image:
-                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 48px 48px;
-        }
-
-        /* ========== VIGNETTE ========== */
-        .vignette {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
-            background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(5, 8, 22, 0.75) 100%);
-        }
-
-        /* ========== SCAN LINE ========== */
-        .scan-line {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
-            background: repeating-linear-gradient(0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(59, 130, 246, 0.015) 2px,
-                    rgba(59, 130, 246, 0.015) 4px);
-        }
-
-        /* ========== MAIN WRAPPER ========== */
-        .app-wrapper {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        /* ========== DASHBOARD CONTAINER ========== */
-        .dashboard {
-            width: 100%;
-            max-width: 960px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 32px;
-            padding: 32px 20px 48px;
-        }
-
-        /* ========== ANIMATED LOGO ========== */
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-        }
-
-        .logo-icon {
-            width: 72px;
-            height: 72px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: logoFloat 4s ease-in-out infinite;
-        }
-
-        .logo-icon svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 20px var(--blue-glow)) drop-shadow(0 0 60px var(--blue-glow));
-        }
-
-        .logo-ring {
-            position: absolute;
-            inset: -12px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(59, 130, 246, 0.2);
-            animation: ringPulse 3s ease-in-out infinite;
-        }
-
-        .logo-ring:nth-child(2) {
-            inset: -20px;
-            animation-delay: 0.6s;
-            border-color: rgba(0, 255, 136, 0.15);
-        }
-
-        .logo-ring:nth-child(3) {
-            inset: -28px;
-            animation-delay: 1.2s;
-            border-color: rgba(59, 130, 246, 0.1);
-        }
-
-        @keyframes logoFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-6px);
-            }
-        }
-
-        @keyframes ringPulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.6;
-            }
-            50% {
-                transform: scale(1.06);
-                opacity: 1;
-            }
-        }
-
-        .logo-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 6px;
-            background: linear-gradient(135deg, #fff 40%, var(--blue) 70%, var(--green) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-            filter: drop-shadow(0 0 30px var(--blue-glow));
-            animation: titleGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            0% {
-                filter: drop-shadow(0 0 20px var(--blue-glow));
-            }
-            100% {
-                filter: drop-shadow(0 0 45px var(--blue-glow)) drop-shadow(0 0 80px rgba(59, 130, 246, 0.15));
-            }
-        }
-
-        .logo-subtitle {
-            font-family: 'Orbitron', monospace;
-            font-size: 11px;
-            letter-spacing: 5px;
-            color: var(--green);
-            text-transform: uppercase;
-            font-weight: 500;
-            text-shadow: 0 0 20px var(--green-glow), 0 0 60px rgba(0, 255, 136, 0.15);
-            animation: subtitlePulse 2.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes subtitlePulse {
-            0% {
-                opacity: 0.7;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        /* ========== STATUS BAR ========== */
-        .status-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.5px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 10px var(--green-glow), 0 0 30px var(--green-glow);
-            animation: dotPulse 2s ease-in-out infinite;
-        }
-
-        .status-dot.blue {
-            background: var(--blue);
-            box-shadow: 0 0 10px var(--blue-glow), 0 0 30px var(--blue-glow);
-        }
-
-        @keyframes dotPulse {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(0.85);
-            }
-        }
-
-        .status-divider {
-            width: 1px;
-            height: 16px;
-            background: rgba(59, 130, 246, 0.2);
-        }
-
-        /* ========== GLASS CARDS ========== */
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: var(--radius);
-            border: 1px solid var(--border-glass);
-            box-shadow: var(--shadow-card);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: var(--radius);
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), transparent 40%, transparent 60%, rgba(0, 255, 136, 0.10));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.25);
-            box-shadow: 0 8px 56px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.12),
-                0 0 40px rgba(59, 130, 246, 0.06);
-            transform: translateY(-2px);
-        }
-
-        .glass-card .card-glow {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.04), transparent 60%);
-            pointer-events: none;
-            animation: cardGlowRotate 12s linear infinite;
-        }
-
-        @keyframes cardGlowRotate {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ========== LOGIN CARD ========== */
-        .login-card {
-            width: 100%;
-            max-width: 500px;
-            padding: 40px 36px 36px;
-        }
-
-        .login-card .card-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .login-card .card-header h2 {
-            font-family: 'Orbitron', monospace;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .login-card .card-header p {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        /* ========== FORM ========== */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            opacity: 0.5;
-            width: 18px;
-            height: 18px;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 14px 16px 14px 44px;
-            background: rgba(5, 8, 22, 0.6);
-            border: 1px solid rgba(59, 130, 246, 0.12);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 14px;
-            font-family: 'JetBrains Mono', monospace;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-wrapper input::placeholder {
-            color: rgba(148, 163, 184, 0.35);
-            font-size: 13px;
-        }
-
-        .input-wrapper input:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08), 0 0 24px rgba(59, 130, 246, 0.06);
-            background: rgba(5, 8, 22, 0.8);
-        }
-
-        .input-wrapper input:focus~.input-icon {
-            opacity: 0.8;
-            color: var(--blue);
-        }
-
-        .input-wrapper .input-border {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 1.5px;
-            background: linear-gradient(90deg, transparent, var(--blue), var(--green), transparent);
-            transition: width 0.4s ease;
-            border-radius: 2px;
-        }
-
-        .input-wrapper input:focus~.input-border {
-            width: 80%;
-        }
-
-        /* ========== BUTTONS ========== */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-family: 'Orbitron', monospace;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-        }
-
-        .btn-primary {
-            width: 100%;
-            background: linear-gradient(135deg, var(--blue), #2563EB);
-            color: #fff;
-            box-shadow: 0 4px 24px rgba(59, 130, 246, 0.25), 0 0 0 1px rgba(59, 130, 246, 0.15);
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 30%, rgba(255, 255, 255, 0.06) 50%, transparent 70%);
-            transform: translateX(-100%) skewX(-15deg);
-            transition: transform 0.6s ease;
-        }
-
-        .btn-primary:hover::before {
-            transform: translateX(100%) skewX(-15deg);
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 6px 32px rgba(59, 130, 246, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.3),
-                0 0 60px rgba(59, 130, 246, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 12px rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-secondary {
-            width: 100%;
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid rgba(59, 130, 246, 0.10);
-            font-size: 12px;
-            letter-spacing: 2px;
-            padding: 12px 24px;
-        }
-
-        .btn-secondary:hover {
-            border-color: rgba(59, 130, 246, 0.25);
-            color: var(--text);
-            background: rgba(59, 130, 246, 0.04);
-        }
-
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 28px;
-        }
-
-        /* ========== LICENSE INFO ========== */
-        .license-info {
-            width: 100%;
-            max-width: 500px;
-            padding: 24px 28px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .info-item .info-label {
-            font-size: 10px;
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-secondary);
-            opacity: 0.7;
-        }
-
-        .info-item .info-value {
-            font-size: 15px;
-            font-weight: 600;
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.5px;
-            color: var(--text);
-        }
-
-        .info-item .info-value.green {
-            color: var(--green);
-            text-shadow: 0 0 20px var(--green-glow);
-        }
-
-        .info-item .info-value.blue {
-            color: var(--blue);
-            text-shadow: 0 0 20px var(--blue-glow);
-        }
-
-        .info-divider {
-            grid-column: 1 / -1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.12), transparent);
-            margin: 4px 0;
-        }
-
-        .info-full {
-            grid-column: 1 / -1;
-        }
-
-        /* ========== CONNECTION INDICATOR ========== */
-        .connection-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0 4px;
-            grid-column: 1 / -1;
-        }
-
-        .connection-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--text-secondary);
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--green);
-            text-shadow: 0 0 20px var(--green-glow);
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 600px) {
-            .dashboard {
-                padding: 20px 12px 32px;
-                gap: 24px;
-            }
-
-            .logo-icon {
-                width: 56px;
-                height: 56px;
-            }
-
-            .logo-title {
-                font-size: 20px;
-                letter-spacing: 4px;
-            }
-
-            .logo-subtitle {
-                font-size: 9px;
-                letter-spacing: 3px;
-            }
-
-            .login-card {
-                padding: 28px 20px 24px;
-            }
-
-            .login-card .card-header h2 {
-                font-size: 15px;
-                letter-spacing: 2px;
-            }
-
-            .license-info {
-                padding: 20px;
-                gap: 14px;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .info-item .info-value {
-                font-size: 13px;
-            }
-
-            .status-bar {
-                gap: 12px;
-            }
-
-            .status-item {
-                font-size: 10px;
-            }
-
-            .status-divider {
-                display: none;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .license-info {
-                grid-template-columns: 1fr;
-            }
-
-            .logo-title {
-                font-size: 17px;
-                letter-spacing: 3px;
-            }
-
-            .login-card {
-                padding: 20px 14px 18px;
-            }
-
-            .input-wrapper input {
-                font-size: 13px;
-                padding: 12px 14px 12px 40px;
-            }
-
-            .btn {
-                font-size: 12px;
-                padding: 12px 20px;
-            }
-        }
-
-        /* ========== LOADING SHIMMER ========== */
-        @keyframes shimmer {
-            0% {
-                background-position: -200% center;
-            }
-            100% {
-                background-position: 200% center;
-            }
-        }
-
-        .shimmer {
-            background: linear-gradient(90deg,
-                    transparent 0%,
-                    rgba(59, 130, 246, 0.04) 50%,
-                    transparent 100%);
-            background-size: 200% 100%;
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        /* ========== SCROLLBAR ========== */
-        .app-wrapper::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .app-wrapper::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .app-wrapper::-webkit-scrollbar-thumb {
-            background: rgba(59, 130, 246, 0.2);
-            border-radius: 4px;
-        }
-
-        .app-wrapper::-webkit-scrollbar-thumb:hover {
-            background: rgba(59, 130, 246, 0.35);
-        }
-
-        /* ========== FADE IN ========== */
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-            opacity: 0;
-        }
-
-        .fade-in-d1 {
-            animation-delay: 0.1s;
-        }
-        .fade-in-d2 {
-            animation-delay: 0.25s;
-        }
-        .fade-in-d3 {
-            animation-delay: 0.4s;
-        }
-        .fade-in-d4 {
-            animation-delay: 0.55s;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🐍 Snake Game</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a1a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+  }
+  .game-wrapper {
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    padding: 20px;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), inset 0 0 40px rgba(0,255,136,0.05);
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 0 6px;
+  }
+  .score-box {
+    background: #0f0f23;
+    padding: 8px 18px;
+    border-radius: 40px;
+    border: 1px solid rgba(0,255,136,0.25);
+    color: #00ff88;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+  }
+  .score-box span { color: #fff; margin-right: 6px; }
+  .high-score { background: #0f0f23; padding: 8px 18px; border-radius: 40px; border: 1px solid rgba(255,215,0,0.25); color: #ffd700; font-weight: 700; font-size: 18px; }
+  .high-score span { color: #fff; margin-right: 6px; }
+  canvas {
+    display: block;
+    width: 450px;
+    height: 450px;
+    border-radius: 16px;
+    background: #0f0f23;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+    touch-action: none;
+  }
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .ctrl-btn {
+    background: #1a1a3e;
+    border: 1px solid #2a2a5e;
+    color: #88ffbb;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    font-size: 26px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: all 0.12s;
+    box-shadow: 0 4px 0 #0a0a1a;
+  }
+  .ctrl-btn:active { transform: translateY(4px); box-shadow: none; background: #2a2a5e; }
+  .ctrl-row { display: flex; gap: 12px; justify-content: center; width: 100%; }
+  .ctrl-grid { display: grid; grid-template-columns: 60px 60px 60px; gap: 8px; }
+  .ctrl-grid .empty { visibility: hidden; }
+  .restart-btn {
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    border: none;
+    color: #0a0a1a;
+    padding: 10px 28px;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 20px rgba(0,255,136,0.3);
+  }
+  .restart-btn:hover { transform: scale(1.04); box-shadow: 0 6px 30px rgba(0,255,136,0.5); }
+  .status {
+    text-align: center;
+    margin-top: 12px;
+    color: #667;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  @media (max-width: 520px) {
+    .game-wrapper { padding: 12px; border-radius: 16px; }
+    canvas { width: calc(100vw - 40px); height: calc(100vw - 40px); }
+    .ctrl-btn { width: 52px; height: 52px; font-size: 22px; }
+  }
+</style>
 </head>
 <body>
 
-    <!-- MATRIX RAIN CANVAS -->
-    <canvas id="matrix-canvas"></canvas>
-
-    <!-- PARTICLES CANVAS -->
-    <canvas id="particles-canvas"></canvas>
-
-    <!-- OVERLAYS -->
-    <div class="grid-overlay"></div>
-    <div class="vignette"></div>
-    <div class="scan-line"></div>
-
-    <!-- ===== APP ===== -->
-    <div class="app-wrapper">
-        <div class="dashboard">
-
-            <!-- LOGO SECTION -->
-            <div class="logo-section fade-in fade-in-d1">
-                <div class="logo-icon">
-                    <div class="logo-ring"></div>
-                    <div class="logo-ring"></div>
-                    <div class="logo-ring"></div>
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="lg" x1="0" y1="0" x2="100" y2="100">
-                                <stop offset="0%" stop-color="#3B82F6" />
-                                <stop offset="100%" stop-color="#00FF88" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Shield -->
-                        <path d="M50 12 L85 28 L85 52 C85 72 69 86 50 92 C31 86 15 72 15 52 L15 28 Z"
-                        stroke="url(#lg)" stroke-width="2.5" fill="none" />
-                        <!-- Inner hex -->
-                        <path d="M50 30 L68 40 L68 60 L50 70 L32 60 L32 40 Z"
-                        stroke="url(#lg)" stroke-width="1.5" fill="none" opacity="0.6" />
-                        <!-- Center dot -->
-                        <circle cx="50" cy="50" r="5" fill="#00FF88" opacity="0.8">
-                            <animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite" />
-                        </circle>
-                        <!-- Circuit lines -->
-                        <path d="M50 12 L50 30 M68 40 L82 34 M32 40 L18 34 M68 60 L82 66 M32 60 L18 66"
-                        stroke="url(#lg)" stroke-width="1" opacity="0.3" stroke-dasharray="3 3" />
-                    </svg>
-                </div>
-                <div class="logo-title">FUSION SERVER 3.3</div>
-                <div class="logo-subtitle">⚡ Quantum Trading Technology</div>
-            </div>
-
-            <!-- STATUS BAR -->
-            <div class="status-bar fade-in fade-in-d2">
-                <div class="status-item">
-                    <span class="status-dot"></span>
-                    API Connected
-                </div>
-                <div class="status-divider"></div>
-                <div class="status-item">
-                    <span class="status-dot blue"></span>
-                    System Online
-                </div>
-                <div class="status-divider"></div>
-                <div class="status-item">
-                    <span style="opacity:0.6;">●</span>
-                    Uptime 99.98%
-                </div>
-                <div class="status-divider"></div>
-                <div class="status-item">
-                    <span style="opacity:0.6;">⧗</span>
-                    Latency 12ms
-                </div>
-            </div>
-
-            <!-- LOGIN CARD -->
-            <div class="glass-card login-card fade-in fade-in-d2">
-                <div class="card-glow"></div>
-                <div class="card-header">
-                    <h2>🔐 Secure Access</h2>
-                    <p>Authenticate to initialize quantum trading engine</p>
-                </div>
-                <form id="loginForm" autocomplete="off">
-                    <div class="form-group">
-                        <label>License Key</label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
-                        <input type="text" id="licenseKey" placeholder="XXXX-XXXX-XXXX-XXXX" />
-                        <span class="input-border"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Device ID</label>
-                    <div class="input-wrapper">
-                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-                        <line x1="12" y1="18" x2="12.01" y2="18" />
-                    </svg>
-                    <input type="text" id="deviceId" placeholder="DEVICE-ID-HASH" />
-                    <span class="input-border"></span>
-                </div>
-            </div>
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary" id="loginBtn">
-                    <span>⨠</span> Initialize Connection
-                </button>
-                <button type="button" class="btn btn-secondary" id="resetBtn">
-                    ⟲ Reset Session
-                </button>
-            </div>
-        </form>
+<div class="game-wrapper">
+  <div class="header">
+    <div class="score-box"><span>SCORE</span> <span id="score">0</span></div>
+    <div class="high-score"><span>🏆</span> <span id="highScore">0</span></div>
+  </div>
+  <canvas id="gameCanvas" width="450" height="450"></canvas>
+  <div class="controls">
+    <div class="ctrl-grid">
+      <div class="empty"></div>
+      <button class="ctrl-btn" data-dir="up">▲</button>
+      <div class="empty"></div>
+      <button class="ctrl-btn" data-dir="left">◀</button>
+      <button class="ctrl-btn" data-dir="down">▼</button>
+      <button class="ctrl-btn" data-dir="right">▶</button>
     </div>
-
-    <!-- LICENSE INFORMATION -->
-    <div class="glass-card license-info fade-in fade-in-d3">
-        <div class="card-glow"></div>
-
-        <div class="info-item">
-            <span class="info-label">License Tier</span>
-            <span class="info-value green">Quantum Pro</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Expiry</span>
-            <span class="info-value" style="color:#fff;">2027-06-30</span>
-        </div>
-
-        <div class="info-divider"></div>
-
-        <div class="connection-row">
-            <span class="connection-label">
-                <span style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green-glow);display:inline-block;"></span>
-                API Status
-            </span>
-            <span class="connection-status">
-                <span>●</span> CONNECTED
-            </span>
-        </div>
-
-        <div class="info-divider"></div>
-
-        <div class="info-item">
-            <span class="info-label">Device Status</span>
-            <span class="info-value green" style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:10px;">●</span> READY
-            </span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">Unique ID</span>
-            <span class="info-value blue" style="font-size:13px;letter-spacing:1px;">FS-3A7D-92F1</span>
-        </div>
-
-        <div class="info-divider"></div>
-
-        <div class="info-item info-full" style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;padding-top:4px;">
-            <span class="info-label" style="font-size:9px;">Encryption</span>
-            <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--green);">AES-256 ● TLS 1.3</span>
-        </div>
-    </div>
-
-    <!-- FOOTER STATUS -->
-    <div style="text-align:center;padding-top:4px;opacity:0.3;font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:2px;color:var(--text-secondary);">
-        ⚡ FUSION SERVER v3.3.7 — QUANTUM TRADING ENGINE INITIALIZED
-    </div>
-
-</div>
+  </div>
+  <div style="text-align:center; margin-top:10px;">
+    <button class="restart-btn" id="restartBtn">↻ NEW GAME</button>
+  </div>
+  <div class="status" id="status">Arrow keys / WASD to move</div>
 </div>
 
 <script>
-    // ============================================================
-    //  MATRIX RAIN
-    // ============================================================
-    (function matrixRain() {
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
+  (function() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const highScoreEl = document.getElementById('highScore');
+    const statusEl = document.getElementById('status');
+    const restartBtn = document.getElementById('restartBtn');
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
+    const GRID_SIZE = 15;          // 15x15 grid
+    const CELL_SIZE = canvas.width / GRID_SIZE;
+    const TICK_MS = 150;
 
-        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
-        const fontSize = 14;
-        const columns = Math.floor(canvas.width / fontSize);
-        const drops = Array.from({ length: columns }, () => Math.floor(Math.random() * canvas.height / fontSize));
+    let snake = [];
+    let food = {};
+    let direction = 'right';
+    let nextDirection = 'right';
+    let score = 0;
+    let highScore = parseInt(localStorage.getItem('snakeHighScore')) || 0;
+    let gameOver = false;
+    let gameWin = false;
+    let gameLoop = null;
+    let isRunning = false;
+    let isPaused = false;
 
-        // Pre-render characters for performance
-        const charArray = chars.split('');
+    // Colors
+    const COLORS = {
+      bg: '#0f0f23',
+      grid: '#15153a',
+      snakeHead: '#00ff88',
+      snakeBody: '#00cc6a',
+      snakeTail: '#00994d',
+      food: '#ff4466',
+      foodGlow: 'rgba(255,68,102,0.3)',
+      text: '#fff',
+    };
 
-        function draw() {
-            ctx.fillStyle = 'rgba(5, 8, 22, 0.06)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+    highScoreEl.textContent = highScore;
 
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const char = charArray[Math.floor(Math.random() * charArray.length)];
-                const x = i * fontSize;
-                const y = drops[i] * fontSize;
-
-                // Gradient green color
-                const brightness = Math.random();
-                if (brightness > 0.95) {
-                    ctx.fillStyle = '#00FF88';
-                    ctx.shadowColor = '#00FF88';
-                    ctx.shadowBlur = 12;
-                } else if (brightness > 0.7) {
-                    ctx.fillStyle = 'rgba(0, 255, 136, 0.7)';
-                    ctx.shadowBlur = 0;
-                } else {
-                    ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
-                    ctx.shadowBlur = 0;
-                }
-
-                ctx.fillText(char, x, y);
-
-                ctx.shadowBlur = 0;
-
-                if (y > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                } else {
-                    drops[i] += 0.6 + Math.random() * 0.4;
-                }
-            }
-            requestAnimationFrame(draw);
-        }
-        draw();
-    })();
-
-    // ============================================================
-    //  PARTICLES
-    // ============================================================
-    (function particles() {
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let mouseX = -1000;
-        let mouseY = -1000;
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles();
-        }
-
-        function initParticles() {
-            const count = Math.min(Math.floor(canvas.width * canvas.height / 12000), 120);
-            particles = [];
-            for (let i = 0; i < count; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    r: Math.random() * 2 + 1,
-                    alpha: Math.random() * 0.4 + 0.1
-                });
-            }
-        }
-
-        resize();
-        window.addEventListener('resize', resize);
-        window.addEventListener('mousemove', (e) => { mouseX = e.clientX;
-            mouseY = e.clientY; });
-        window.addEventListener('mouseleave', () => { mouseX = -1000;
-            mouseY = -1000; });
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0) p.x = canvas.width;
-                if (p.x > canvas.width) p.x = 0;
-                if (p.y < 0) p.y = canvas.height;
-                if (p.y > canvas.height) p.y = 0;
-
-                // Draw particle
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(59, 130, 246, ${p.alpha})`;
-                ctx.fill();
-
-                // Connection lines
-                for (let j = i + 1; j < particles.length; j++) {
-                    const p2 = particles[j];
-                    const dx = p.x - p2.x;
-                    const dy = p.y - p2.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 120) {
-                        const alpha = 0.12 * (1 - dist / 120);
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
-                        ctx.lineWidth = 0.6;
-                        ctx.stroke();
-                    }
-                }
-
-                // Connection to mouse
-                const dx = p.x - mouseX;
-                const dy = p.y - mouseY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 160) {
-                    const alpha = 0.18 * (1 - dist / 160);
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(mouseX, mouseY);
-                    ctx.strokeStyle = `rgba(0, 255, 136, ${alpha})`;
-                    ctx.lineWidth = 0.8;
-                    ctx.stroke();
-                }
-            }
-            requestAnimationFrame(draw);
-        }
-        draw();
-    })();
-
-    // ============================================================
-    //  FORM LOGIC
-    // ============================================================
-    const form = document.getElementById('loginForm');
-    const licenseInput = document.getElementById('licenseKey');
-    const deviceInput = document.getElementById('deviceId');
-    const loginBtn = document.getElementById('loginBtn');
-    const resetBtn = document.getElementById('resetBtn');
-
-    // Auto-format license key: XXXX-XXXX-XXXX-XXXX
-    licenseInput.addEventListener('input', function(e) {
-        let val = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-        let formatted = '';
-        for (let i = 0; i < val.length && i < 16; i++) {
-            if (i > 0 && i % 4 === 0) formatted += '-';
-            formatted += val[i];
-        }
-        this.value = formatted;
-    });
-
-    // Generate random Device ID on load
-    function generateDeviceId() {
-        const chars = 'ABCDEF0123456789';
-        let id = '';
-        for (let i = 0; i < 12; i++) {
-            if (i === 4 || i === 8) id += '-';
-            id += chars[Math.floor(Math.random() * chars.length)];
-        }
-        return 'DEV-' + id;
+    // ---- Init ----
+    function init() {
+      const mid = Math.floor(GRID_SIZE / 2);
+      snake = [
+        { x: mid, y: mid },
+        { x: mid - 1, y: mid },
+        { x: mid - 2, y: mid },
+      ];
+      direction = 'right';
+      nextDirection = 'right';
+      score = 0;
+      gameOver = false;
+      gameWin = false;
+      isPaused = false;
+      scoreEl.textContent = '0';
+      statusEl.textContent = 'Playing...';
+      spawnFood();
+      draw();
     }
 
-    if (!deviceInput.value) {
-        deviceInput.value = generateDeviceId();
+    // ---- Food ----
+    function spawnFood() {
+      const totalCells = GRID_SIZE * GRID_SIZE;
+      if (snake.length >= totalCells) {
+        gameWin = true;
+        gameOver = true;
+        stopLoop();
+        statusEl.textContent = '🎉 YOU WIN! PERFECT!';
+        return;
+      }
+      const snakeSet = new Set(snake.map(c => `${c.x},${c.y}`));
+      const free = [];
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let y = 0; y < GRID_SIZE; y++) {
+          if (!snakeSet.has(`${x},${y}`)) free.push({ x, y });
+        }
+      }
+      if (free.length === 0) {
+        gameWin = true;
+        gameOver = true;
+        stopLoop();
+        statusEl.textContent = '🎉 YOU WIN! PERFECT!';
+        return;
+      }
+      food = free[Math.floor(Math.random() * free.length)];
     }
 
-    // Login submit
-    form.addEventListener('submit', function(e) {
+    // ---- Drawing ----
+    function draw() {
+      ctx.fillStyle = COLORS.bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Grid lines
+      ctx.strokeStyle = COLORS.grid;
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i <= GRID_SIZE; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * CELL_SIZE, 0);
+        ctx.lineTo(i * CELL_SIZE, canvas.height);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, i * CELL_SIZE);
+        ctx.lineTo(canvas.width, i * CELL_SIZE);
+        ctx.stroke();
+      }
+
+      // Food glow
+      const fx = food.x * CELL_SIZE + CELL_SIZE / 2;
+      const fy = food.y * CELL_SIZE + CELL_SIZE / 2;
+      const grad = ctx.createRadialGradient(fx, fy, 2, fx, fy, CELL_SIZE * 1.2);
+      grad.addColorStop(0, COLORS.foodGlow);
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.fillRect(food.x * CELL_SIZE - CELL_SIZE * 0.6, food.y * CELL_SIZE - CELL_SIZE * 0.6, CELL_SIZE * 2.2, CELL_SIZE * 2.2);
+
+      // Food
+      ctx.fillStyle = COLORS.food;
+      ctx.shadowColor = COLORS.food;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(fx, fy, CELL_SIZE * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Snake
+      for (let i = snake.length - 1; i >= 0; i--) {
+        const seg = snake[i];
+        const px = seg.x * CELL_SIZE;
+        const py = seg.y * CELL_SIZE;
+        const pad = i === 0 ? 2 : 3;
+        const radius = 4;
+
+        if (i === 0) {
+          ctx.fillStyle = gameOver ? '#ff4466' : COLORS.snakeHead;
+          ctx.shadowColor = gameOver ? '#ff4466' : COLORS.snakeHead;
+          ctx.shadowBlur = 16;
+        } else {
+          const t = i / snake.length;
+          ctx.fillStyle = lerpColor(COLORS.snakeBody, COLORS.snakeTail, t);
+          ctx.shadowBlur = 0;
+        }
+
+        // Rounded rect
+        const w = CELL_SIZE - pad * 2;
+        ctx.beginPath();
+        ctx.moveTo(px + pad + radius, py + pad);
+        ctx.lineTo(px + pad + w - radius, py + pad);
+        ctx.quadraticCurveTo(px + pad + w, py + pad, px + pad + w, py + pad + radius);
+        ctx.lineTo(px + pad + w, py + pad + w - radius);
+        ctx.quadraticCurveTo(px + pad + w, py + pad + w, px + pad + w - radius, py + pad + w);
+        ctx.lineTo(px + pad + radius, py + pad + w);
+        ctx.quadraticCurveTo(px + pad, py + pad + w, px + pad, py + pad + w - radius);
+        ctx.lineTo(px + pad, py + pad + radius);
+        ctx.quadraticCurveTo(px + pad, py + pad, px + pad + radius, py + pad);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Eyes on head
+        if (i === 0 && !gameOver) {
+          ctx.fillStyle = '#0a0a1a';
+          const eyeSize = 3.5;
+          let ex1, ey1, ex2, ey2;
+          const cx = px + CELL_SIZE / 2;
+          const cy = py + CELL_SIZE / 2;
+          if (direction === 'right') {
+            ex1 = cx + 5; ey1 = cy - 6; ex2 = cx + 5; ey2 = cy + 6;
+          } else if (direction === 'left') {
+            ex1 = cx - 5; ey1 = cy - 6; ex2 = cx - 5; ey2 = cy + 6;
+          } else if (direction === 'up') {
+            ex1 = cx - 6; ey1 = cy - 5; ex2 = cx + 6; ey2 = cy - 5;
+          } else {
+            ex1 = cx - 6; ey1 = cy + 5; ex2 = cx + 6; ey2 = cy + 5;
+          }
+          ctx.beginPath(); ctx.arc(ex1, ey1, eyeSize, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(ex2, ey2, eyeSize, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#fff';
+          ctx.beginPath(); ctx.arc(ex1 + 1, ey1 - 1, 1.2, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(ex2 + 1, ey2 - 1, 1.2, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+    }
+
+    function lerpColor(c1, c2, t) {
+      const r1 = parseInt(c1.slice(1,3),16), g1 = parseInt(c1.slice(3,5),16), b1 = parseInt(c1.slice(5,7),16);
+      const r2 = parseInt(c2.slice(1,3),16), g2 = parseInt(c2.slice(3,5),16), b2 = parseInt(c2.slice(5,7),16);
+      const r = Math.round(r1 + (r2 - r1) * t);
+      const g = Math.round(g1 + (g2 - g1) * t);
+      const b = Math.round(b1 + (b2 - b1) * t);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    // ---- Game Logic ----
+    function step() {
+      if (gameOver || isPaused) return;
+
+      direction = nextDirection;
+
+      const head = { ...snake[0] };
+      switch (direction) {
+        case 'up':    head.y--; break;
+        case 'down':  head.y++; break;
+        case 'left':  head.x--; break;
+        case 'right': head.x++; break;
+      }
+
+      // Wall wrap
+      if (head.x < 0) head.x = GRID_SIZE - 1;
+      if (head.x >= GRID_SIZE) head.x = 0;
+      if (head.y < 0) head.y = GRID_SIZE - 1;
+      if (head.y >= GRID_SIZE) head.y = 0;
+
+      // Self collision
+      for (let i = 0; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) {
+          gameOver = true;
+          stopLoop();
+          statusEl.textContent = '💀 GAME OVER';
+          if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('snakeHighScore', highScore);
+            highScoreEl.textContent = highScore;
+            statusEl.textContent = '🏆 NEW HIGH SCORE!';
+          }
+          draw();
+          return;
+        }
+      }
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        scoreEl.textContent = score;
+        spawnFood();
+        if (gameOver) return; // win condition triggered inside spawnFood
+      } else {
+        snake.pop();
+      }
+
+      draw();
+    }
+
+    function startLoop() {
+      if (gameLoop) clearInterval(gameLoop);
+      gameLoop = setInterval(step, TICK_MS);
+      isRunning = true;
+    }
+
+    function stopLoop() {
+      if (gameLoop) {
+        clearInterval(gameLoop);
+        gameLoop = null;
+      }
+      isRunning = false;
+    }
+
+    // ---- Restart ----
+    function restart() {
+      stopLoop();
+      init();
+      startLoop();
+    }
+
+    // ---- Input ----
+    function setDirection(dir) {
+      const opposites = { up: 'down', down: 'up', left: 'right', right: 'left' };
+      if (dir !== opposites[direction] && dir !== direction) {
+        nextDirection = dir;
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const keyMap = {
+        ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
+        w: 'up', W: 'up', s: 'down', S: 'down', a: 'left', A: 'left', d: 'right', D: 'right',
+      };
+      const dir = keyMap[e.key];
+      if (dir) {
         e.preventDefault();
-        const key = licenseInput.value.trim();
-        const device = deviceInput.value.trim();
-
-        if (!key) {
-            licenseInput.focus();
-            licenseInput.style.borderColor = '#EF4444';
-            licenseInput.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.12)';
-            setTimeout(() => {
-                licenseInput.style.borderColor = '';
-                licenseInput.style.boxShadow = '';
-            }, 1200);
-            return;
-        }
-
-        if (!device) {
-            deviceInput.focus();
-            deviceInput.style.borderColor = '#EF4444';
-            deviceInput.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.12)';
-            setTimeout(() => {
-                deviceInput.style.borderColor = '';
-                deviceInput.style.boxShadow = '';
-            }, 1200);
-            return;
-        }
-
-        // Simulate connection
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = '<span>⏳</span> Authenticating...';
-
-        setTimeout(() => {
-            loginBtn.innerHTML = '<span>✓</span> Connected Successfully';
-            loginBtn.style.background = 'linear-gradient(135deg, #00FF88, #00CC66)';
-            loginBtn.style.boxShadow = '0 4px 24px rgba(0,255,136,0.25)';
-
-            // Update some info fields
-            document.querySelector('.info-value.blue').textContent = 'FS-' +
-                key.replace(/[^A-Z0-9]/g, '').slice(0, 4) + '-' +
-                device.replace(/[^A-Z0-9]/g, '').slice(0, 4);
-
-            setTimeout(() => {
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '<span>⨠</span> Initialize Connection';
-                loginBtn.style.background = '';
-                loginBtn.style.boxShadow = '';
-            }, 3000);
-        }, 1800);
+        if (gameOver) { restart(); return; }
+        setDirection(dir);
+      }
     });
 
-    // Reset
-    resetBtn.addEventListener('click', function() {
-        licenseInput.value = '';
-        deviceInput.value = generateDeviceId();
-        loginBtn.disabled = false;
-        loginBtn.innerHTML = '<span>⨠</span> Initialize Connection';
-        loginBtn.style.background = '';
-        loginBtn.style.boxShadow = '';
-        licenseInput.focus();
-
-        // Flash effect
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.style.transition = 'all 0.15s ease';
-            card.style.borderColor = 'rgba(59,130,246,0.3)';
-            setTimeout(() => {
-                card.style.borderColor = '';
-            }, 400);
-        });
+    document.querySelectorAll('.ctrl-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const dir = btn.dataset.dir;
+        if (gameOver) { restart(); return; }
+        setDirection(dir);
+      });
+      // Prevent default on touch
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const dir = btn.dataset.dir;
+        if (gameOver) { restart(); return; }
+        setDirection(dir);
+      });
     });
 
-    // ============================================================
-    //  REAL-TIME CLOCK IN FOOTER
-    // ============================================================
-    function updateFooterClock() {
-        const footer = document.querySelector('.dashboard > div:last-child');
-        if (footer) {
-            const now = new Date();
-            const time = now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
-            footer.textContent = `⚡ FUSION SERVER v3.3.7 — ${time}`;
-        }
-    }
-    updateFooterClock();
-    setInterval(updateFooterClock, 1000);
+    // Touch swipe on canvas
+    let touchStartX = 0, touchStartY = 0;
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+    }, { passive: false });
 
-    console.log('%c FUSION SERVER 3.3 ',
-        'background:#050816;color:#00FF88;font-size:18px;font-weight:bold;padding:8px 16px;border:1px solid #3B82F6;border-radius:8px;'
-        );
-    console.log('%c Quantum Trading Technology • System Online', 'color:#94A3B8;font-size:12px;');
+    canvas.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      if (!touchStartX || !touchStartY) return;
+      const rect = canvas.getBoundingClientRect();
+      const endX = touchStartX + (e.changedTouches[0].clientX - touchStartX);
+      const endY = touchStartY + (e.changedTouches[0].clientY - touchStartY);
+      const dx = endX - touchStartX;
+      const dy = endY - touchStartY;
+      const minSwipe = 20;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > minSwipe) {
+        if (gameOver) { restart(); return; }
+        setDirection(dx > 0 ? 'right' : 'left');
+      } else if (Math.abs(dy) > minSwipe) {
+        if (gameOver) { restart(); return; }
+        setDirection(dy > 0 ? 'down' : 'up');
+      }
+      touchStartX = 0; touchStartY = 0;
+    }, { passive: false });
+
+    restartBtn.addEventListener('click', restart);
+    restartBtn.addEventListener('touchstart', (e) => { e.preventDefault(); restart(); });
+
+    // ---- Start ----
+    init();
+    startLoop();
+  })();
 </script>
-
 </body>
 </html>
