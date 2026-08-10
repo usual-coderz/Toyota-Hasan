@@ -1,923 +1,519 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeAI Studio</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%238b5cf6'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='monospace'>&lt;/&gt;</text></svg>">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Talat — Teacher &amp; Singer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
-:root{
-  --bg:#07070b;--panel:#0e0e16;--card:#15151f;--card2:#1a1a28;
-  --border:rgba(255,255,255,.07);--text:#e9e9f2;--muted:#8a8fa8;
-  --accent:#8b5cf6;--accent2:#22d3ee;--danger:#f43f5e;--ok:#34d399;--warn:#f59e0b;
-  --grad:linear-gradient(135deg,#8b5cf6,#6366f1,#22d3ee);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',Roboto,'Inter',sans-serif;overflow:hidden}
-code,pre,.mono{font-family:'SF Mono','JetBrains Mono','Fira Code',Consolas,monospace}
-::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:6px}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.22)}
-#app{display:flex;height:100vh}
-.sidebar{width:262px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:60;transition:transform .25s ease}
-.sidebar.collapsed{transform:translateX(-100%)}
-.brand{display:flex;align-items:center;gap:11px;padding:18px 16px;font-weight:800;font-size:17px;letter-spacing:.3px}
-.brand .logo{width:36px;height:36px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;box-shadow:0 4px 16px rgba(139,92,246,.4);flex-shrink:0}
-.brand .tag{font-size:10px;color:var(--muted);font-weight:600;display:block;letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
-.nav-scroll{flex:1;overflow-y:auto;padding:6px 12px 16px}
-.nav-label{font-size:10.5px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);padding:16px 10px 8px;font-weight:700}
-.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:var(--muted);cursor:pointer;font-size:13.5px;font-weight:500;transition:all .15s;margin-bottom:2px;border:1px solid transparent;user-select:none}
-.nav-item:hover{background:var(--card);color:var(--text)}
-.nav-item.active{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(34,211,238,.08));color:#fff;border-color:rgba(139,92,246,.4);box-shadow:0 4px 14px rgba(139,92,246,.15)}
-.nav-item i{width:18px;text-align:center;font-size:14px}
-.side-foot{padding:14px;border-top:1px solid var(--border)}
-.status{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);padding:11px 12px;background:var(--card);border:1px solid var(--border);border-radius:11px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--warn);flex-shrink:0}
-.dot.ok{background:var(--ok);box-shadow:0 0 9px rgba(52,211,153,.7)}
-.dot.bad{background:var(--danger);box-shadow:0 0 9px rgba(244,63,94,.7)}
-.status small{display:block;color:var(--muted);opacity:.8;font-size:10.5px;margin-top:1px;word-break:break-all}
-.main{flex:1;display:flex;flex-direction:column;min-width:0}
-.topbar{height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 20px;background:rgba(10,10,16,.75);backdrop-filter:blur(12px);flex-shrink:0}
-.hamburger{display:none;width:36px;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);cursor:pointer;align-items:center;justify-content:center;font-size:15px}
-.top-title{font-size:14.5px;font-weight:700}
-.top-sub{font-size:11.5px;color:var(--muted)}
-.spacer{flex:1}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
-.btn:hover{border-color:var(--accent);background:var(--card2)}
-.btn.primary{background:var(--grad);border:none;color:#fff;box-shadow:0 4px 18px rgba(139,92,246,.35)}
-.btn.primary:hover{filter:brightness(1.12)}
-.btn.danger{background:var(--danger);border:none;color:#fff}
-.btn.danger:hover{filter:brightness(1.12)}
-.btn.ghost{background:transparent}
-.btn.small{padding:6px 12px;font-size:12px;border-radius:8px}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.view{display:none;flex:1;overflow-y:auto}
-.view.active{display:block}
-.view-pad{max-width:1060px;margin:0 auto;padding:26px 26px 60px;width:100%}
-h2.page-title{font-size:20px;font-weight:800;margin-bottom:4px}
-p.page-sub{color:var(--muted);font-size:13px;margin-bottom:22px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:18px}
-.panel h3{font-size:15px;font-weight:700;margin-bottom:4px}
-.panel .hint{font-size:12.5px;color:var(--muted);margin-bottom:16px}
-.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin:16px 0 7px;text-transform:uppercase;letter-spacing:.9px}
-input[type=text],input[type=password],input[type=url],textarea,select{width:100%;background:var(--card);border:1px solid var(--border);border-radius:11px;color:var(--text);padding:11px 13px;font-size:13.5px;font-family:inherit;outline:none;transition:border .15s,box-shadow .15s;resize:vertical}
-input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.18)}
-label{margin:14px 0 7px;display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.9px}
-.flex{display:flex;gap:10px;align-items:center}
-.flex.col{flex-direction:column;align-items:stretch}
-.between{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.chat{flex:1;display:flex;flex-direction:column;height:100%;max-width:880px;margin:0 auto;width:100%;min-height:0}
-.chat.scroller{overflow-y:auto}
-#view-chat.active{display:flex;flex-direction:column}
-.msg-list{flex:1;overflow-y:auto;padding:22px 22px 8px;scroll-behavior:smooth}
-.msg{display:flex;gap:12px;margin-bottom:24px;animation:fadeUp .25s ease}
-.msg .avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px}
-.msg.user{flex-direction:row-reverse}
-.msg.user .avatar{background:var(--grad);color:#fff;box-shadow:0 4px 14px rgba(139,92,246,.4)}
-.msg.ai .avatar{background:var(--card2);border:1px solid var(--border);color:#a78bfa}
-.bubble{max-width:80%;padding:12px 16px;border-radius:15px;font-size:13.8px;line-height:1.65;background:var(--card);border:1px solid var(--border);overflow-wrap:break-word}
-.msg.user .bubble{background:rgba(139,92,246,.16);border-color:rgba(139,92,246,.35)}
-.bubble pre{background:#0b0b12;border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow-x:auto;margin:10px 0;font-size:12.5px;line-height:1.55}
-.bubble pre code{background:transparent;padding:0;font-size:12.5px}
-.bubble p{margin:6px 0}
-.bubble p:first-child{margin-top:0}
-.bubble p:last-child{margin-bottom:0}
-.bubble ul,.bubble ol{margin:6px 0 6px 20px}
-.bubble a{color:var(--accent2)}
-.bubble h1,.bubble h2,.bubble h3,.bubble h4{margin:12px 0 6px;line-height:1.35}
-.bubble blockquote{border-left:3px solid var(--accent);padding-left:12px;margin:8px 0;color:var(--muted)}
-.bubble table{border-collapse:collapse;margin:8px 0}
-.bubble td,.bubble th{border:1px solid var(--border);padding:6px 10px}
-.suggestions{display:flex;gap:8px;flex-wrap:wrap;padding:16px 22px 4px}
-.chip{padding:8px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12.5px;cursor:pointer;transition:all .15s}
-.chip:hover{border-color:var(--accent);color:#fff;background:rgba(139,92,246,.12)}
-.chat-input-wrap{padding:14px 22px 22px}
-.chat-input-row{display:flex;gap:10px;align-items:flex-end;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:17px;box-shadow:0 10px 35px rgba(0,0,0,.4);transition:border .15s}
-.chat-input-row:focus-within{border-color:var(--accent)}
-#chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;font-family:inherit;resize:none;max-height:140px;line-height:1.5;padding:6px 4px}
-.send-btn{width:40px;height:40px;border-radius:12px;background:var(--grad);border:none;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:filter .15s}
-.send-btn:hover{filter:brightness(1.15)}
-.send-btn:disabled{opacity:.5;cursor:not-allowed}
-.typing{display:inline-flex;gap:4px;align-items:center;padding:4px 2px}
-.typing span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 1.2s infinite}
-.typing span:nth-child(2){animation-delay:.2s}
-.typing span:nth-child(3){animation-delay:.4s}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:14px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:18px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
-.card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 12px 34px rgba(0,0,0,.45)}
-.card .ico{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(34,211,238,.15));display:flex;align-items:center;justify-content:center;color:#a78bfa;font-size:15px;margin-bottom:12px}
-.card h3{font-size:14.5px;font-weight:700;margin-bottom:10px;word-break:break-all}
-.stats{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
-.stats b{color:var(--text)}
-.stat-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted)}
-.stat-chip i{color:var(--accent)}
-.stat-chip b{color:var(--text);font-size:12.5px}
-.result-box{background:#0b0b12;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:16px}
-.result-box .toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--card);border-bottom:1px solid var(--border)}
-.result-box .toolbar .lang{padding:3px 10px;border-radius:14px;background:rgba(139,92,246,.16);color:#c4b5fd;font-size:11px;font-weight:700;letter-spacing:.5px}
-.code-box{margin:0;padding:16px;overflow:auto;max-height:520px;font-size:13px;line-height:1.6;color:#d7dae2}
-.code-box code{font-size:13px;line-height:1.6;background:transparent}
-.detail-split{display:grid;grid-template-columns:300px 1fr;gap:16px;min-height:480px}
-.file-list{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px;overflow-y:auto;max-height:620px}
-.file-list .fl-head{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:6px 8px 10px;font-weight:700}
-.file-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:13px;color:var(--muted);margin-bottom:2px;transition:all .12s;word-break:break-all}
-.file-item:hover{background:var(--card);color:var(--text)}
-.file-item.active{background:rgba(139,92,246,.16);color:#fff}
-.file-item i{width:15px;text-align:center;flex-shrink:0;color:var(--accent)}
-.file-item .sz{margin-left:auto;font-size:10.5px;opacity:.7;flex-shrink:0}
-.editor-shell{display:flex;flex-direction:column;min-width:0}
-.editor-head{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-bottom:none;border-radius:13px 13px 0 0;flex-wrap:wrap}
-.editor-head .fpath{font-size:12px;color:var(--muted);font-family:'SF Mono',Consolas,monospace;flex:1;min-width:120px;word-break:break-all}
-.dirty-tag{display:none;font-size:10px;color:var(--warn);font-weight:700;letter-spacing:1px}
-.dirty .dirty-tag{display:block}
-#file-content{flex:1;width:100%;min-height:430px;background:#0b0b12;color:#d7dae2;border:1px solid var(--border);border-radius:0 0 13px 13px;padding:15px;font-family:'SF Mono',Consolas,monospace;font-size:13px;line-height:1.65;resize:vertical;outline:none;tab-size:4;white-space:pre;overflow:auto}
-.result-list{margin-top:14px;display:flex;flex-direction:column;gap:8px}
-.result-list .ri{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:11px;font-size:13px}
-.result-list .ri i{color:var(--ok);width:16px}
-.result-list .ri.err{color:#fda4af}
-.result-list .ri.err i{color:var(--danger)}
-.mono-out{background:#0b0b12;border:1px solid var(--border);border-radius:11px;padding:14px;font-size:12.5px;line-height:1.6;overflow:auto;max-height:400px;color:#a5b4fc;white-space:pre-wrap;word-break:break-word}
-.endpoints{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:9px;margin-top:16px}
-.ep{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--muted)}
-.ep b{font-family:'SF Mono',Consolas,monospace;font-size:10.5px;padding:2px 7px;border-radius:6px;background:rgba(139,92,246,.15);color:#c4b5fd;flex-shrink:0}
-.ep span{word-break:break-all;font-family:'SF Mono',Consolas,monospace;font-size:11.5px;color:var(--text)}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:55;opacity:0;pointer-events:none;transition:opacity .25s}
-.overlay.show{opacity:1;pointer-events:auto}
-#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--card2);border:1px solid var(--border);color:var(--text);padding:12px 22px;border-radius:13px;font-size:13px;font-weight:600;z-index:100;transition:transform .3s cubic-bezier(.2,.9,.3,1.2);box-shadow:0 14px 40px rgba(0,0,0,.55);display:flex;align-items:center;gap:10px;pointer-events:none}
-#toast.show{transform:translateX(-50%) translateY(0)}
-#toast i{color:var(--accent2)}
-#toast.err i{color:var(--danger)}
-#toast.warn i{color:var(--warn)}
-.center{text-align:center}
-.muted{color:var(--muted)}
-.empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:13.5px;border:1px dashed var(--border);border-radius:14px;background:rgba(255,255,255,.015)}
-.empty i{font-size:26px;margin-bottom:12px;opacity:.5;display:block}
-.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.85)}40%{opacity:1;transform:scale(1)}}
-@keyframes rot{to{transform:rotate(360deg)}}
-@media(max-width:920px){
-  .sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%)}
-  .sidebar.mobile-open{transform:none;box-shadow:0 0 60px rgba(0,0,0,.6)}
-  .hamburger{display:inline-flex}
-  .detail-split{grid-template-columns:1fr}
-  .file-list{max-height:240px}
-  .msg.user .bubble{max-width:92%}
-  .bubble{max-width:92%}
-}
+  :root {
+    --cream: #faf6f0;
+    --paper: #fffdf9;
+    --plum: #4a2c3a;
+    --plum-soft: #6d4a5c;
+    --gold: #c9a227;
+    --gold-soft: #e6c86a;
+    --ink: #3a2b33;
+    --line: rgba(74, 44, 58, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Jost", sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, .serif { font-family: "Cormorant Garamond", serif; }
+
+  /* ---------- Floating music notes ---------- */
+  .notes {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .note {
+    position: absolute;
+    bottom: -60px;
+    font-size: 26px;
+    color: rgba(201, 162, 39, 0.35);
+    animation: floatUp linear infinite;
+    user-select: none;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.9; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .wrap { position: relative; z-index: 1; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 6vw;
+    background: rgba(250, 246, 240, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .logo {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--plum);
+    letter-spacing: 1px;
+  }
+  .logo span { color: var(--gold); }
+  nav ul { display: flex; gap: 2.4rem; list-style: none; }
+  nav a {
+    text-decoration: none;
+    color: var(--plum-soft);
+    font-weight: 400;
+    font-size: 0.95rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  nav a:hover { color: var(--gold); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 6vw 60px;
+    background: radial-gradient(ellipse at 50% 0%, #fffdf9 0%, var(--cream) 70%);
+  }
+  .hero .stamp {
+    font-size: 0.9rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    animation: fadeDown 1s ease both;
+  }
+  .hero h1 {
+    font-size: clamp(4rem, 12vw, 8.5rem);
+    font-weight: 600;
+    color: var(--plum);
+    line-height: 1;
+    animation: fadeDown 1s 0.15s ease both;
+  }
+  .hero h1 i { color: var(--gold); font-style: italic; }
+  .hero .role {
+    margin-top: 22px;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--plum-soft);
+    animation: fadeDown 1s 0.3s ease both;
+  }
+  .hero .role span { color: var(--gold); }
+  .divider {
+    width: 70px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 26px auto;
+    animation: fadeDown 1s 0.45s ease both;
+  }
+  .hero p.tag {
+    max-width: 520px;
+    color: var(--plum-soft);
+    font-weight: 300;
+    animation: fadeDown 1s 0.6s ease both;
+  }
+  .cta {
+    margin-top: 34px;
+    display: flex;
+    gap: 16px;
+    animation: fadeDown 1s 0.75s ease both;
+  }
+  .btn {
+    text-decoration: none;
+    padding: 13px 34px;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .btn-solid {
+    background: var(--plum);
+    color: var(--cream);
+    border: 1px solid var(--plum);
+  }
+  .btn-solid:hover { background: var(--gold); border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(201,162,39,.3); }
+  .btn-ghost {
+    color: var(--plum);
+    border: 1px solid var(--plum);
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--plum-soft);
+    opacity: 0.6;
+  }
+  .scroll-hint::after {
+    content: "";
+    display: block;
+    width: 1px; height: 44px;
+    background: var(--gold);
+    margin: 10px auto 0;
+    animation: pulse 1.8s ease infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+
+  /* ---------- Sections ---------- */
+  section { padding: 100px 8vw; }
+  .container { max-width: 1000px; margin: 0 auto; }
+
+  .sec-head { text-align: center; margin-bottom: 56px; }
+  .sec-head .eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .sec-head h2 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    color: var(--plum);
+    margin-top: 6px;
+  }
+  .sec-head .divider { margin: 16px auto; }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .portrait {
+    aspect-ratio: 4 / 5;
+    border-radius: 8px;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(201,162,39,.25), transparent 50%),
+      linear-gradient(160deg, var(--plum-soft), var(--plum));
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 24px 60px rgba(74,44,58,.25);
+  }
+  .portrait .initials {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 7rem;
+    color: rgba(250,246,240,.9);
+  }
+  .portrait::after {
+    content: "♫";
+    position: absolute;
+    bottom: 14px; right: 18px;
+    font-size: 1.8rem;
+    color: var(--gold-soft);
+    opacity: .8;
+  }
+  .about-text h3 {
+    font-size: 1.9rem;
+    color: var(--plum);
+    margin-bottom: 14px;
+  }
+  .about-text p { color: var(--plum-soft); font-weight: 300; margin-bottom: 14px; }
+  .about-text p b { color: var(--plum); font-weight: 500; }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 22px;
+  }
+  .fact {
+    border: 1px solid var(--line);
+    border-radius: 40px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: var(--plum);
+    background: var(--paper);
+  }
+  .fact span { color: var(--gold); margin-right: 6px; }
+
+  /* Hobbies */
+  #hobbies { background: var(--paper); }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 26px;
+  }
+  .card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 36px 28px;
+    text-align: center;
+    transition: all 0.4s ease;
+    cursor: default;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 44px rgba(74,44,58,.15);
+    border-color: var(--gold);
+  }
+  .card .icon {
+    font-size: 2.6rem;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: inline-block;
+  }
+  .card:hover .icon { animation: wiggle .6s ease; }
+  @keyframes wiggle { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+  .card h3 { font-size: 1.5rem; color: var(--plum); margin-bottom: 8px; }
+  .card p { color: var(--plum-soft); font-weight: 300; font-size: 0.95rem; }
+
+  /* Quote */
+  .quote {
+    text-align: center;
+    padding: 90px 8vw;
+    background:
+      linear-gradient(rgba(74,44,58,.92), rgba(74,44,58,.94)),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><text x="10" y="50" font-size="40" fill="%23c9a227" opacity="0.25">♫</text></svg>');
+    background-size: auto, 80px;
+  }
+  .quote blockquote {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    color: var(--cream);
+    max-width: 760px;
+    margin: 0 auto 18px;
+  }
+  .quote cite {
+    color: var(--gold-soft);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-style: normal;
+  }
+
+  /* Contact / Footer */
+  footer {
+    text-align: center;
+    padding: 70px 8vw 40px;
+  }
+  footer h2 { font-size: clamp(2rem, 5vw, 3rem); color: var(--plum); }
+  footer .sub { color: var(--plum-soft); font-weight: 300; margin-top: 8px; }
+  .socials { display: flex; justify-content: center; gap: 18px; margin: 30px 0 44px; }
+  .socials a {
+    width: 46px; height: 46px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    color: var(--plum);
+    font-size: 1.1rem;
+    transition: all 0.3s;
+  }
+  .socials a:hover { background: var(--gold); color: #fff; border-color: var(--gold); transform: translateY(-4px); }
+  footer .copy { font-size: 0.8rem; letter-spacing: 2px; color: rgba(58,43,51,.5); text-transform: uppercase; }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(34px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 760px) {
+    nav ul { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+    section { padding: 70px 7vw; }
+    .hero h1 { font-size: clamp(3.2rem, 16vw, 5rem); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
-<div id="app">
-  <div class="overlay" id="overlay"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="logo"><i class="fa-solid fa-code"></i></div>
-      <div>CodeAI<span class="tag">Studio</span></div>
-    </div>
-    <div class="nav-scroll">
-      <div class="nav-label">Workspace</div>
-      <div class="nav-item active" data-view="chat"><i class="fa-solid fa-comments"></i>AI Chat</div>
-      <div class="nav-item" data-view="code"><i class="fa-solid fa-terminal"></i>Code Snippet</div>
-      <div class="nav-item" data-view="generate"><i class="fa-solid fa-wand-magic-sparkles"></i>Generate Project</div>
-      <div class="nav-item" data-view="projects"><i class="fa-solid fa-folder-tree"></i>Projects</div>
-      <div class="nav-label">Enhance</div>
-      <div class="nav-item" data-view="autofix"><i class="fa-solid fa-bug-slash"></i>Auto-Fix</div>
-      <div class="nav-item" data-view="improve"><i class="fa-solid fa-arrow-trend-up"></i>Improve Code</div>
-      <div class="nav-item" data-view="tests"><i class="fa-solid fa-vial-circle-check"></i>Generate Tests</div>
-      <div class="nav-item" data-view="push"><i class="fa-brands fa-github"></i>GitHub Push</div>
-      <div class="nav-label">System</div>
-      <div class="nav-item" data-view="settings"><i class="fa-solid fa-gear"></i>Settings</div>
-    </div>
-    <div class="side-foot">
-      <div class="status" id="status-box">
-        <span class="dot" id="status-dot"></span>
-        <div>
-          <div id="status-text">Checking API...</div>
-          <small id="status-url">http://3.110.85.2:8000</small>
-        </div>
-      </div>
-    </div>
-  </aside>
 
-  <main class="main">
-    <header class="topbar">
-      <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
-      <div>
-        <div class="top-title" id="view-title">AI Chat</div>
-        <div class="top-sub" id="view-sub">Ask CodeAI anything</div>
-      </div>
-      <div class="spacer"></div>
-      <button class="btn small" id="btn-newchat" style="display:none"><i class="fa-solid fa-plus"></i>New Chat</button>
-      <button class="btn small" id="btn-settings"><i class="fa-solid fa-gear"></i>Settings</button>
-    </header>
+<!-- Floating music notes -->
+<div class="notes" id="notes"></div>
 
-    <div class="view active" id="view-chat">
-      <div class="chat">
-        <div class="suggestions" id="chat-suggestions"></div>
-        <div class="msg-list" id="msg-list"></div>
-        <div class="chat-input-wrap">
-          <div class="chat-input-row">
-            <textarea id="chat-input" rows="1" placeholder="Ask CodeAI anything about your code..."></textarea>
-            <button class="send-btn" id="chat-send" title="Send"><i class="fa-solid fa-paper-plane"></i></button>
+<div class="wrap">
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">Talat<span>.</span></div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#hobbies">Hobbies</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero" id="home">
+    <div class="stamp">✦ Welcome to my world ✦</div>
+    <h1>Talat <i>.</i></h1>
+    <p class="role">Teacher <span>·</span> Singer <span>·</span> Dreamer</p>
+    <div class="divider"></div>
+    <p class="tag">
+      Teaching minds by day, singing melodies by heart —
+      a life woven with chalk dust and music notes.
+    </p>
+    <div class="cta">
+      <a href="#about" class="btn btn-solid">My Story</a>
+      <a href="#hobbies" class="btn btn-ghost">My Passion</a>
+    </div>
+    <div class="scroll-hint">Scroll</div>
+  </header>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div class="eyebrow">About Me</div>
+        <h2>Namaste, I'm Talat</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="about-grid">
+        <div class="portrait reveal">
+          <span class="initials">T</span>
+        </div>
+        <div class="about-text reveal">
+          <h3>A Teacher who sings</h3>
+          <p>
+            I am <b>Talat</b> — a dedicated <b>teacher</b> who believes every
+            classroom is a stage and every lesson, a song. For me, education
+            is not just books and boards; it is the art of igniting curiosity
+            in young hearts.
+          </p>
+          <p>
+            Beyond the classroom, my true melody lives in <b>singing</b>.
+            Whether it's a soulful ghazal or a cheerful folk tune, music is
+            where my spirit finds its rhythm — and often, my students get to
+            hear a little of it too!
+          </p>
+          <div class="facts">
+            <span class="fact"><span>✎</span>Teacher</span>
+            <span class="fact"><span>♪</span>Singer</span>
+            <span class="fact"><span>❤</span>Kind Heart</span>
+            <span class="fact"><span>✦</span>Dreamer</span>
           </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="view" id="view-code">
-      <div class="view-pad">
-        <h2 class="page-title">Code Snippet</h2>
-        <p class="page-sub">Generate a standalone code snippet in any language.</p>
-        <div class="panel">
-          <label>Prompt</label>
-          <textarea id="code-prompt" rows="5" placeholder="e.g. Write a Python function to fetch and paginate a REST API"></textarea>
-          <div class="flex" style="margin-top:14px;flex-wrap:wrap">
-            <select id="code-lang" style="max-width:230px">
-              <option value="python">Python</option>
-              <option value="javascript">JavaScript</option>
-              <option value="typescript">TypeScript</option>
-              <option value="java">Java</option>
-              <option value="cpp">C++</option>
-              <option value="csharp">C#</option>
-              <option value="go">Go</option>
-              <option value="rust">Rust</option>
-              <option value="php">PHP</option>
-              <option value="ruby">Ruby</option>
-              <option value="html">HTML</option>
-              <option value="css">CSS</option>
-              <option value="sql">SQL</option>
-              <option value="bash">Bash</option>
-              <option value="json">JSON</option>
-            </select>
-            <button class="btn primary" id="btn-code"><i class="fa-solid fa-bolt"></i>Generate Code</button>
-          </div>
-          <div class="result-box" id="code-result-wrap" style="display:none">
-            <div class="toolbar">
-              <span class="lang" id="code-lang-out">python</span>
-              <div class="spacer"></div>
-              <button class="btn small ghost" id="code-copy"><i class="fa-regular fa-copy"></i>Copy</button>
-              <button class="btn small ghost" id="code-download"><i class="fa-solid fa-download"></i>Download</button>
-            </div>
-            <pre class="code-box"><code id="code-result"></code></pre>
-          </div>
+  <!-- Hobbies -->
+  <section id="hobbies">
+    <div class="container">
+      <div class="sec-head reveal">
+        <div class="eyebrow">What I Love</div>
+        <h2>My Hobbies &amp; Passions</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="cards">
+        <div class="card reveal">
+          <span class="icon">🎤</span>
+          <h3>Singing</h3>
+          <p>My favourite escape — from soft melodies to energetic folk, singing is my soul's language.</p>
+        </div>
+        <div class="card reveal">
+          <span class="icon">📚</span>
+          <h3>Teaching</h3>
+          <p>Shaping futures one lesson at a time. Nothing beats the spark in a student's eyes.</p>
+        </div>
+        <div class="card reveal">
+          <span class="icon">📖</span>
+          <h3>Reading</h3>
+          <p>Losing myself in stories and poems — every book is a new melody to discover.</p>
+        </div>
+        <div class="card reveal">
+          <span class="icon">🎶</span>
+          <h3>Music</h3>
+          <p>Listening, learning new ragas, and humming along to everything that touches the heart.</p>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="view" id="view-generate">
-      <div class="view-pad">
-        <h2 class="page-title">Generate Project</h2>
-        <p class="page-sub">Describe a full project and CodeAI will scaffold it on the server.</p>
-        <div class="panel">
-          <label>Task Description</label>
-          <textarea id="gen-task" rows="7" placeholder="e.g. Build a Flask REST API with SQLite, JWT auth, and a /health endpoint"></textarea>
-          <label>Project Name</label>
-          <input type="text" id="gen-name" placeholder="my_project (optional)">
-          <div class="flex" style="margin-top:16px">
-            <button class="btn primary" id="btn-generate"><i class="fa-solid fa-wand-magic-sparkles"></i>Generate Project</button>
-          </div>
-          <div id="gen-result"></div>
-        </div>
-      </div>
-    </div>
+  <!-- Quote -->
+  <section class="quote reveal">
+    <blockquote>
+      "A teacher plants the seeds of knowledge,
+      but a singer waters them with melody."
+    </blockquote>
+    <cite>— Talat</cite>
+  </section>
 
-    <div class="view" id="view-projects">
-      <div class="view-pad">
-        <div id="projects-browser">
-          <div class="between">
-            <div>
-              <h2 class="page-title">Projects</h2>
-              <p class="page-sub" style="margin-bottom:0">Projects generated on the CodeAI server.</p>
-            </div>
-            <button class="btn small" id="btn-refresh-projects"><i class="fa-solid fa-rotate"></i>Refresh</button>
-          </div>
-          <div class="grid" id="projects-grid"></div>
-        </div>
-        <div id="project-detail" style="display:none">
-          <div class="between" style="margin-bottom:10px">
-            <div class="flex">
-              <button class="btn small" id="btn-back-projects"><i class="fa-solid fa-arrow-left"></i>Back</button>
-              <h2 class="page-title" id="proj-name" style="font-size:17px"></h2>
-            </div>
-            <div class="flex">
-              <button class="btn small" id="btn-proj-fix"><i class="fa-solid fa-bug-slash"></i>Fix</button>
-              <button class="btn small" id="btn-proj-improve"><i class="fa-solid fa-arrow-trend-up"></i>Improve</button>
-              <button class="btn small" id="btn-proj-tests"><i class="fa-solid fa-vial-circle-check"></i>Tests</button>
-              <button class="btn small" id="btn-proj-push"><i class="fa-brands fa-github"></i>Push</button>
-            </div>
-          </div>
-          <div class="flex" id="proj-stats" style="margin-bottom:16px;flex-wrap:wrap"></div>
-          <div class="detail-split">
-            <div class="file-list">
-              <div class="fl-head">Files</div>
-              <div id="file-items"></div>
-            </div>
-            <div class="editor-shell">
-              <div class="editor-head">
-                <span class="fpath" id="cur-file-path">Select a file</span>
-                <span class="dirty-tag">UNSAVED</span>
-                <button class="btn small ghost" id="btn-copy-path" style="display:none"><i class="fa-regular fa-copy"></i>Path</button>
-                <button class="btn small ghost" id="btn-copy-file" style="display:none"><i class="fa-regular fa-copy"></i>Copy</button>
-                <button class="btn small danger" id="btn-delete-file" style="display:none"><i class="fa-solid fa-trash"></i>Delete</button>
-                <button class="btn small primary" id="btn-save-file" style="display:none"><i class="fa-solid fa-floppy-disk"></i>Save</button>
-              </div>
-              <textarea id="file-content" placeholder="Select a file from the list to view and edit its contents." disabled></textarea>
-            </div>
-          </div>
-          <div id="proj-actions-result"></div>
-        </div>
-      </div>
+  <!-- Footer / Contact -->
+  <footer id="contact">
+    <h2>Let's Connect</h2>
+    <p class="sub">For lessons, melodies, or just a warm hello — reach out!</p>
+    <div class="socials">
+      <a href="#" title="Email">✉</a>
+      <a href="#" title="Instagram">◎</a>
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="YouTube">▶</a>
     </div>
+    <div class="copy">© 2026 Talat — Crafted with ♥ &amp; music notes</div>
+  </footer>
 
-    <div class="view" id="view-autofix">
-      <div class="view-pad">
-        <h2 class="page-title">Auto-Fix</h2>
-        <p class="page-sub">Paste an error log and CodeAI will analyze and fix the project.</p>
-        <div class="panel">
-          <label>Project</label>
-          <select id="fix-project"></select>
-          <label>Error Log</label>
-          <textarea id="fix-errors" rows="7" placeholder="Paste the full error/traceback output here..."></textarea>
-          <div class="flex" style="margin-top:16px">
-            <button class="btn primary" id="btn-fix"><i class="fa-solid fa-bug-slash"></i>Auto-Fix Project</button>
-          </div>
-          <div id="fix-result"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="view" id="view-improve">
-      <div class="view-pad">
-        <h2 class="page-title">Improve Code</h2>
-        <p class="page-sub">Request a full code-quality pass on any generated project.</p>
-        <div class="panel">
-          <label>Project</label>
-          <select id="improve-project"></select>
-          <div class="flex" style="margin-top:16px">
-            <button class="btn primary" id="btn-improve"><i class="fa-solid fa-arrow-trend-up"></i>Improve Project</button>
-          </div>
-          <div id="improve-result"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="view" id="view-tests">
-      <div class="view-pad">
-        <h2 class="page-title">Generate Tests</h2>
-        <p class="page-sub">Auto-generate unit tests for an entire project.</p>
-        <div class="panel">
-          <label>Project</label>
-          <select id="test-project"></select>
-          <div class="flex" style="margin-top:16px">
-            <button class="btn primary" id="btn-tests"><i class="fa-solid fa-vial-circle-check"></i>Generate Tests</button>
-          </div>
-          <div id="test-result"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="view" id="view-push">
-      <div class="view-pad">
-        <h2 class="page-title">Push to GitHub</h2>
-        <p class="page-sub">Create a GitHub repo remotely and push the project from the server.</p>
-        <div class="panel">
-          <label>Project</label>
-          <select id="push-project"></select>
-          <label>Repository Name</label>
-          <input type="text" id="push-repo" placeholder="my-repo">
-          <label>GitHub Personal Access Token</label>
-          <input type="password" id="push-token" placeholder="ghp_...">
-          <div class="flex" style="margin-top:16px">
-            <button class="btn primary" id="btn-push"><i class="fa-brands fa-github"></i>Create & Push</button>
-          </div>
-          <div id="push-result"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="view" id="view-settings">
-      <div class="view-pad">
-        <h2 class="page-title">Settings</h2>
-        <p class="page-sub">Configure the CodeAI backend connection.</p>
-        <div class="panel">
-          <h3>API Connection</h3>
-          <p class="hint">The API runs on your server. The current URL is saved in your browser and used for all requests.</p>
-          <label>API Base URL</label>
-          <input type="url" id="api-input" placeholder="http://3.110.85.2:8000">
-          <div class="flex" style="margin-top:16px;flex-wrap:wrap">
-            <button class="btn primary" id="btn-save-api"><i class="fa-solid fa-floppy-disk"></i>Save & Reconnect</button>
-            <button class="btn" id="btn-test-api"><i class="fa-solid fa-plug"></i>Test Connection</button>
-          </div>
-          <div id="settings-status" style="margin-top:14px"></div>
-        </div>
-        <div class="panel">
-          <h3>Endpoints</h3>
-          <p class="hint">Exposed API surface of your CodeAI server.</p>
-          <div class="endpoints"></div>
-        </div>
-      </div>
-    </div>
-  </main>
 </div>
-<div id="toast"></div>
+
 <script>
-marked.use({breaks:true,gfm:true});
-const $=id=>document.getElementById(id);
-const LS_API="codeai_api";
-let API_BASE=localStorage.getItem(LS_API)||"http://3.110.85.2:8000";
-const TITLES={chat:["AI Chat","Instant answers from CodeAI"],code:["Code Snippet","Generate standalone code"],generate:["Generate Project","Scaffold full projects"],projects:["Projects","Browse and edit generated projects"],autofix:["Auto-Fix","Fix bugs from error logs"],improve:["Improve Code","Code quality pass"],tests:["Generate Tests","Unit tests for projects"],push:["GitHub Push","Create repo and push"],settings:["Settings","API configuration"]};
-const SUGGESTIONS=["Explain how the /generate endpoint works","Write a FastAPI app with JWT auth","Find and fix bugs in my Python code","Create a TODO app in JavaScript","Design a schema for an e-commerce store","Write unit tests for a login function"];
-let chatHistory=[],currentProject=null,currentFile=null,projectsCache=[];
-function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML;}
-function toast(msg,type){
-  const t=$("toast");
-  t.innerHTML=(type==="err"?'<i class="fa-solid fa-circle-xmark"></i>':type==="warn"?'<i class="fa-solid fa-triangle-exclamation"></i>':'<i class="fa-solid fa-circle-check"></i>')+esc(msg);
-  t.className=type||"";
-  t.classList.add("show");
-  clearTimeout(t._h);
-  t._h=setTimeout(()=>t.classList.remove("show"),2800);
-}
-async function api(path,method,body){
-  const opts={method:method||"GET",headers:{}};
-  if(body){opts.headers["Content-Type"]="application/json";opts.body=JSON.stringify(body);}
-  let res;
-  try{res=await fetch(API_BASE+path,opts);}
-  catch(e){throw new Error("Cannot reach API at "+API_BASE+" — check connection");}
-  let data=null;
-  const raw=await res.text();
-  try{data=JSON.parse(raw);}catch(e){data=raw;}
-  if(!res.ok){
-    let msg="Request failed ("+res.status+")";
-    if(data&&typeof data==="object"){
-      if(Array.isArray(data.detail))msg=data.detail.map(d=>d.msg||JSON.stringify(d)).join("; ");
-      else if(data.detail)msg=data.detail;
-      else if(data.error)msg=data.error;
-    }else if(typeof data==="string"&&data){msg=data;}
-    throw new Error(msg);
+  // Floating music notes generator
+  const notesBox = document.getElementById("notes");
+  const glyphs = ["♪", "♫", "♬", "♩", "♭"];
+  const colors = ["rgba(201,162,39,0.35)", "rgba(74,44,58,0.22)", "rgba(230,200,106,0.4)"];
+  for (let i = 0; i < 14; i++) {
+    const n = document.createElement("span");
+    n.className = "note";
+    n.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+    n.style.left = Math.random() * 100 + "vw";
+    n.style.fontSize = 16 + Math.random() * 26 + "px";
+    n.style.color = colors[Math.floor(Math.random() * colors.length)];
+    n.style.animationDuration = 12 + Math.random() * 14 + "s";
+    n.style.animationDelay = Math.random() * 12 + "s";
+    notesBox.appendChild(n);
   }
-  return data;
-}
-function switchView(name){
-  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-  $("view-"+name).classList.add("active");
-  document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.view===name));
-  const t=TITLES[name]||[name,""];
-  $("view-title").textContent=t[0];
-  $("view-sub").textContent=t[1];
-  $("btn-newchat").style.display=name==="chat"?"":"none";
-  closeSidebar();
-  if(name==="projects")loadProjects();
-  if(name==="autofix"||name==="improve"||name==="tests"||name==="push")loadToolSelects(name);
-}
-function openSidebar(){$("sidebar").classList.add("mobile-open");$("overlay").classList.add("show");}
-function closeSidebar(){$("sidebar").classList.remove("mobile-open");$("overlay").classList.remove("show");}
-async function updateStatus(){
-  $("status-dot").className="dot";
-  $("status-text").textContent="Connecting...";
-  $("status-url").textContent=API_BASE;
-  try{
-    const d=await api("/");
-    $("status-dot").classList.add("ok");
-    const name=d&&(d.model||d.name||d.service)?" — "+d.model||"":"";
-    $("status-text").textContent="API connected"+name;
-  }catch(e){
-    $("status-dot").classList.add("bad");
-    $("status-text").textContent="API offline";
-  }
-}
-function renderChat(){
-  const list=$("msg-list");
-  list.innerHTML="";
-  if(!chatHistory.length){
-    list.innerHTML='<div class="msg ai"><div class="avatar"><i class="fa-solid fa-robot"></i></div><div class="bubble">Hi! I\'m <b>CodeAI</b>. Ask me anything about writing, fixing, or understanding code — or try one of the quick prompts below.<br><br><span class="muted">Example: "Explain this bug in my Python script"</span></div></div>';
-    return;
-  }
-  chatHistory.forEach(m=>{
-    const row=document.createElement("div");
-    row.className="msg "+m.role;
-    const av=m.role==="user"?'<div class="avatar"><i class="fa-solid fa-user"></i></div>':'<div class="avatar"><i class="fa-solid fa-robot"></i></div>';
-    const body=m.role==="user'?esc(m.text):('<div class="bubble">'+marked.parse(m.text)+'</div>');
-    row.innerHTML=av+body;
-    list.appendChild(row);
-  });
-  list.querySelectorAll("pre code").forEach(el=>{try{hljs.highlightElement(el);}catch(e){}});
-  list.scrollTop=list.scrollHeight;
-}
-function addTyping(){
-  const list=$("msg-list");
-  const t=document.createElement("div");
-  t.className="msg ai";
-  t.id="typing-msg";
-  t.innerHTML='<div class="avatar"><i class="fa-solid fa-robot"></i></div><div class="bubble"><span class="typing"><span></span><span></span><span></span></span></div>';
-  list.appendChild(t);
-  list.scrollTop=list.scrollHeight;
-  return t;
-}
-function removeTyping(t){if(t&&t.parentNode)t.parentNode.removeChild(t);}
-async function sendChat(){
-  const box=$("chat-input");
-  const text=box.value.trim();
-  if(!text)return;
-  chatHistory.push({role:"user",text});
-  box.value="";
-  box.style.height="auto";
-  renderChat();
-  const t=addTyping();
-  const send=$("chat-send");
-  send.disabled=true;
-  try{
-    const d=await api("/chat","POST",{message:text});
-    const reply=(d&&d.response)||"No response received.";
-    chatHistory.push({role:"ai",text:reply});
-  }catch(e){
-    chatHistory.push({role:"ai",text:"**Error:** "+e.message});
-  }
-  removeTyping(t);
-  send.disabled=false;
-  renderChat();
-}
-function renderSuggestions(){
-  const wrap=$("chat-suggestions");
-  wrap.innerHTML="";
-  SUGGESTIONS.forEach(s=>{
-    const c=document.createElement("button");
-    c.className="chip";
-    c.type="button";
-    c.textContent=s;
-    c.onclick=()=>{$("chat-input").value=s;$("chat-input").focus();};
-    wrap.appendChild(c);
-  });
-}
-function copyText(text){
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>toast("Copied to clipboard")).catch(()=>{toast("Copy failed","err");});}
-  else{
-    const ta=document.createElement("textarea");
-    ta.value=text;document.body.appendChild(ta);ta.select();
-    try{document.execCommand("copy");toast("Copied to clipboard");}catch(e){toast("Copy failed","err");}
-    ta.remove();
-  }
-}
-function downloadFile(name,content){
-  const b=new Blob([content],{type:"text/plain"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(b);
-  a.download=name;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-const EXT={"python":"py","javascript":"js","typescript":"ts","java":"java","cpp":"cpp","csharp":"cs","go":"go","rust":"rs","php":"php","ruby":"rb","html":"html","css":"css","sql":"sql","bash":"sh","json":"json"};
-async function genCode(){
-  const prompt=$("code-prompt").value.trim();
-  if(!prompt){toast("Enter a prompt first","warn");return;}
-  const lang=$("code-lang").value;
-  const btn=$("btn-code");
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span> Generating...';
-  $("code-result-wrap").style.display="block";
-  const el=$("code-result");
-  el.textContent="Generating...";
-  try{
-    const d=await api("/code","POST",{prompt,language:lang});
-    const code=(d&&d.code)||"";
-    el.textContent=code;
-    el.className="";
-    try{hljs.highlightElement(el);}catch(e){}
-    $("code-lang-out").textContent=(d&&d.language)||lang;
-    $("code-download").onclick=()=>downloadFile("snippet."+(EXT[lang]||"txt"),code);
-  }catch(e){
-    el.textContent=e.message;
-    $("code-lang-out").textContent="error";
-  }
-  btn.disabled=false;
-  btn.innerHTML='<i class="fa-solid fa-bolt"></i>Generate Code';
-}
-function renderGenResult(d){
-  const wrap=$("gen-result");
-  const files=(d&&d.files)||[];
-  const list=files.map(f=>'<div class="ri"><i class="fa-solid fa-file-code"></i>'+esc(f)+'</div>').join("");
-  wrap.innerHTML='<div class="result-box"><div class="toolbar"><span class="lang" style="background:rgba(52,211,153,.16);color:#6ee7b7"><i class="fa-solid fa-circle-check"></i> Success</span><span class="lang">'+esc(d.project_name||"")+'</span><div class="spacer"></div>'+(
-    d.project_path?'<button class="btn small ghost" id="gen-open-btn"><i class="fa-solid fa-folder-open"></i>Open in Projects</button>':''
-  )+'</div><div class="mono-out" style="max-height:none"><div class="flex" style="margin-bottom:14px;flex-wrap:wrap">'+
-  '<span class="stat-chip"><i class="fa-solid fa-file"></i><b>'+((d.total_files!=null)?d.total_files:files.length)+'</b> files</span>'+
-  '<span class="stat-chip"><i class="fa-solid fa-list-ol"></i><b>'+((d.total_lines!=null)?d.total_lines:"—")+'</b> lines</span>'+
-  '<span class="stat-chip"><i class="fa-solid fa-folder"></i>'+esc(d.project_path||"")+'</span></div>'+(list||'<div class="muted">No file list returned.</div>')+'</div></div>';
-  const ob=$("gen-open-btn");
-  if(ob){
-    ob.onclick=()=>{
-      runProjectAction("open",d.project_path);
-      switchView("projects");
-    };
-  }
-  loadProjects();
-}
-async function genProject(){
-  const task=$("gen-task").value.trim();
-  if(!task){toast("Describe the project first","warn");return;}
-  const name=$("gen-name").value.trim()||"my_project";
-  const btn=$("btn-generate");
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span> Building...';
-  try{
-    const d=await api("/generate","POST",{task,project_name:name});
-    renderGenResult(d||{});
-    toast("Project generated");
-  }catch(e){
-    $("gen-result").innerHTML='<div class="result-box"><div class="mono-out" style="color:#fda4af">Error: '+esc(e.message)+'</div></div>';
-  }
-  btn.disabled=false;
-  btn.innerHTML='<i class="fa-solid fa-wand-magic-sparkles"></i>Generate Project';
-}
-function projectCards(list){
-  if(!list||!list.length){
-    return '<div class="empty" style="grid-column:1/-1"><i class="fa-solid fa-folder-open"></i>No projects yet.<br><br>Generate one from the <b>Generate Project</b> view.</div>';
-  }
-  return list.map(p=>{
-    const n=p.name||"untitled";
-    return '<div class="card" data-name="'+esc(n)+'" data-path="'+esc(p.path||"")+'">'+
-    '<div class="ico"><i class="fa-solid fa-cube"></i></div>'+
-    '<h3>'+esc(n)+'</h3>'+
-    '<div class="stats"><span><b>'+((p.files!=null)?p.files:"0")+'</b> files</span><span><b>'+((p.lines!=null)?p.lines:"0")+'</b> lines</span><span><b>'+((p.size_kb!=null)?p.size_kb:"0")+'</b> KB</span></div></div>';
-  }).join("");
-}
-async function loadProjects(){
-  $("projects-grid").innerHTML='<div class="center muted" style="grid-column:1/-1;padding:30px"><span class="spin"></span> Loading projects...</div>';
-  try{
-    const d=await api("/projects");
-    projectsCache=(d&&d.projects)||[];
-    $("projects-grid").innerHTML=projectCards(projectsCache);
-    $("projects-grid").querySelectorAll(".card").forEach(c=>{
-      c.onclick=()=>openProject(c.dataset.name,c.dataset.path);
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) e.target.classList.add("visible");
     });
-  }catch(e){
-    $("projects-grid").innerHTML='<div class="empty" style="grid-column:1/-1"><i class="fa-solid fa-triangle-exclamation"></i>'+esc(e.message)+'</div>';
-  }
-}
-function iconFor(ext){
-  const m={"py":"fa-brands fa-python","js":"fa-brands fa-js","ts":"fa-brands fa-js","java":"fa-brands fa-java","html":"fa-brands fa-html5","css":"fa-brands fa-css3-alt","json":"fa-solid fa-brackets-curly","md":"fa-solid fa-file-lines","txt":"fa-solid fa-file-lines","sql":"fa-solid fa-database","sh":"fa-solid fa-terminal","go":"fa-brands fa-golang","rs":"fa-brands fa-rust"};
-  return m[ext]||"fa-solid fa-file-code";
-}
-async function openProject(name,path){
-  try{
-    const d=await api("/project/"+encodeURIComponent(name));
-    currentProject={name:name,path:path||d.path||("projects/"+name),files:(d.files)||[]};
-    $("projects-browser").style.display="none";
-    $("project-detail").style.display="block";
-    $("proj-name").textContent=currentProject.name;
-    $("proj-stats").innerHTML='<span class="stat-chip"><i class="fa-solid fa-file"></i><b>'+currentProject.files.length+'</b> files</span><span class="stat-chip"><i class="fa-solid fa-folder"></i>'+esc(currentProject.path)+'</span>';
-    const fl=$("file-items");
-    fl.innerHTML="";
-    currentProject.files.forEach(f=>{
-      const it=document.createElement("div");
-      it.className="file-item";
-      it.dataset.rel=f.path;
-      const ext=(f.path.split(".").pop()||"").toLowerCase();
-      it.innerHTML='<i class="'+iconFor(ext)+'"></i>'+esc(f.path)+'<span class="sz">'+((f.lines!=null)?f.lines+" ln":"")+'</span>';
-      it.onclick=()=>loadFile(f.path);
-      fl.appendChild(it);
-    });
-    $("file-content").value="Select a file";
-    $("file-content").disabled=true;
-    $("cur-file-path").textContent=currentProject.files.length+" files in project";
-    currentFile=null;
-    $("btn-save-file").style.display="none";
-    $("btn-delete-file").style.display="none";
-    $("btn-copy-file").style.display="none";
-    $("btn-copy-path").style.display="none";
-  }catch(e){
-    toast(e.message,"err");
-  }
-}
-async function loadFile(rel){
-  if(!currentProject)return;
-  const abs=currentProject.path.replace(/\/+$/,"")+"/"+rel;
-  try{
-    const d=await api("/file?filepath="+encodeURIComponent(abs));
-    currentFile={rel:rel,path:abs,content:(d&&d.content)||""};
-    $("file-content").value=currentFile.content;
-    $("file-content").disabled=false;
-    $("cur-file-path").textContent=abs;
-    $("btn-save-file").style.display="";
-    $("btn-delete-file").style.display="";
-    $("btn-copy-file").style.display="";
-    $("btn-copy-path").style.display="";
-    $("file-content").closest(".editor-shell").classList.remove("dirty");
-    document.querySelectorAll(".file-item").forEach(el=>el.classList.toggle("active",el.dataset.rel===rel));
-  }catch(e){
-    toast(e.message,"err");
-  }
-}
-async function saveFile(){
-  if(!currentFile)return;
-  const content=$("file-content").value;
-  try{
-    await api("/save","POST",{path:currentFile.path,content});
-    currentFile.content=content;
-    $("file-content").closest(".editor-shell").classList.remove("dirty");
-    toast("File saved");
-  }catch(e){toast(e.message,"err");}
-}
-async function deleteFile(){
-  if(!currentFile)return;
-  if(!confirm("Delete this file from the server?"))return;
-  try{
-    await api("/delete","POST",{path:currentFile.path});
-    toast("File deleted");
-    openProject(currentProject.name,currentProject.path);
-  }catch(e){toast(e.message,"err");}
-}
-function runProjectAction(action,projectPath){
-  if(![undefined,""].includes(projectPath))return;
-  if(action==="fix"){switchView("autofix");}
-  if(action==="improve"){switchView("improve");}
-  if(action==="tests"){switchView("tests");}
-  if(action==="push"){switchView("push");}
-}
-async function loadToolSelects(view){
-  const map={autofix:"fix-project",improve:"improve-project",tests:"test-project",push:"push-project"};
-  const sel=$(map[view]);
-  if(!sel)return;
-  try{
-    if(!projectsCache.length){
-      const d=await api("/projects");
-      projectsCache=(d&&d.projects)||[];
-    }
-    sel.innerHTML="";
-    if(!projectsCache.length){
-      sel.innerHTML='<option value="">No projects yet</option>';
-      return;
-    }
-    projectsCache.forEach(p=>{
-      const o=document.createElement("option");
-      o.value=p.path||("projects/"+p.name);
-      o.textContent=p.name;
-      sel.appendChild(o);
-    });
-  }catch(e){
-    sel.innerHTML='<option value="">'+esc(e.message)+'</option>';
-  }
-}
-function resultHTML(d){
-  const r=[];
-  if(d===null||d===undefined)return '<div class="muted">Empty response.</div>';
-  if(typeof d==="string")return '<div class="mono-out">'+esc(d)+'</div>';
-  if(d.fixes&&Array.isArray(d.fixes)){
-    r.push('<div class="result-list">');
-    d.fixes.forEach(f=>{
-      if(f&&typeof f==="object"){
-        r.push('<div class="ri"><i class="fa-solid fa-check"></i><span>'+esc((f.file||"")+" — "+(f.fix||f.fixed||f.message||"fixed"))+'</span></div>');
-      }else{
-        r.push('<div class="ri"><i class="fa-solid fa-check"></i><span>'+esc(String(f))+'</span></div>');
-      }
-    });
-    r.push('</div>');
-  }
-  if(d.files_fixed){r.push('<div class="ri"><i class="fa-solid fa-check"></i><span>Files fixed: '+esc(String(d.files_fixed))+'</span></div>');}
-  if(d.files_improved){r.push('<div class="ri"><i class="fa-solid fa-check"></i><span>Files improved: '+esc(String(d.files_improved))+'</span></div>');}
-  if(d.tests_created){r.push('<div class="ri"><i class="fa-solid fa-check"></i><span>Tests created: '+esc(String(d.tests_created))+'</span></div>');}
-  if(d.message){r.push('<div class="ri"><i class="fa-solid fa-circle-info"></i><span>'+esc(d.message)+'</span></div>');}
-  if(d.error){r.push('<div class="ri err"><i class="fa-solid fa-circle-xmark"></i><span>'+esc(d.error)+'</span></div>');}
-  if(!r.length){
-    const s=JSON.stringify(d,null,2);
-    return '<pre class="mono-out">'+esc(s)+'</pre>';
-  }
-  return r.join("");
-}
-async function runTool(path,payload,resultId,btnId,label){
-  const btn=$(btnId);
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span> Working...';
-  $(resultId).innerHTML='';
-  try{
-    const d=await api(path,"POST",payload);
-    $(resultId).innerHTML='<div class="result-box"><div class="toolbar"><span class="lang" style="background:rgba(52,211,153,.16);color:#6ee7b7"><i class="fa-solid fa-circle-check"></i> Done</span></div><div style="padding:14px">'+resultHTML(d||{})+'</div></div>';
-    toast("Operation completed");
-  }catch(e){
-    $(resultId).innerHTML='<div class="result-box"><div class="mono-out" style="color:#fda4af">Error: '+esc(e.message)+'</div></div>';
-  }
-  btn.disabled=false;
-  btn.innerHTML=label;
-}
-function initTools(){
-  $("btn-fix").addEventListener("click",()=>{
-    const p=$("fix-project").value,err=$("fix-errors").value.trim();
-    if(!p){toast("Select a project","warn");return;}
-    if(!err){toast("Paste an error log first","warn");return;}
-    runTool("/fix",{project_path:p,error_log:err},"fix-result","btn-fix",'<i class="fa-solid fa-bug-slash"></i>Auto-Fix Project');
-  });
-  $("btn-improve").addEventListener("click",()=>{
-    const p=$("improve-project").value;
-    if(!p){toast("Select a project","warn");return;}
-    runTool("/improve",{project_path:p},"improve-result","btn-improve",'<i class="fa-solid fa-arrow-trend-up"></i>Improve Project');
-  });
-  $("btn-tests").addEventListener("click",()=>{
-    const p=$("test-project").value;
-    if(!p){toast("Select a project","warn");return;}
-    runTool("/test",{project_path:p},"test-result","btn-tests",'<i class="fa-solid fa-vial-circle-check"></i>Generate Tests');
-  });
-  $("btn-push").addEventListener("click",async()=>{
-    const p=$("push-project").value,repo=$("push-repo").value.trim(),token=$("push-token").value.trim();
-    if(!p){toast("Select a project","warn");return;}
-    if(!repo){toast("Enter a repository name","warn");return;}
-    if(!token){toast("Enter a GitHub token","warn");return;}
-    const btn=$("btn-push");
-    btn.disabled=true;
-    btn.innerHTML='<span class="spin"></span> Pushing...';
-    try{
-      const qs="?project_path="+encodeURIComponent(p)+"&repo_name="+encodeURIComponent(repo)+"&token="+encodeURIComponent(token);
-      const d=await api("/push"+qs,"POST");
-      $("push-result").innerHTML='<div class="result-box"><div class="toolbar"><span class="lang" style="background:rgba(52,211,153,.16);color:#6ee7b7"><i class="fa-solid fa-circle-check"></i> Pushed</span></div><div style="padding:14px">'+resultHTML(d||{})+'</div></div>';
-      toast("Pushed to GitHub");
-    }catch(e){
-      $("push-result").innerHTML='<div class="result-box"><div class="mono-out" style="color:#fda4af">Error: '+esc(e.message)+'</div></div>';
-    }
-    btn.disabled=false;
-    btn.innerHTML='<i class="fa-brands fa-github"></i>Create & Push';
-  });
-}
-function applySettings(){
-  API_BASE=$("api-input").value.trim().replace(/\/+$/,"")||API_BASE;
-  localStorage.setItem(LS_API,API_BASE);
-  $("status-url").textContent=API_BASE;
-  updateStatus();
-}
-function initSettings(){
-  const eps=[["GET","/"],["POST","/generate"],["POST","/code"],["POST","/fix"],["POST","/chat"],["POST","/improve"],["POST","/test"],["GET","/projects"],["GET","/project/{name}"],["GET","/file?filepath="],["POST","/save"],["POST","/delete"],["POST","/push"]];
-  const wrap=document.querySelector(".endpoints");
-  wrap.innerHTML="";
-  eps.forEach(e=>{
-    const d=document.createElement("div");
-    d.className="ep";
-    d.innerHTML="<b>"+e[0]+"</b><span>"+esc(e[1])+"</span>";
-    wrap.appendChild(d);
-  });
-  $("btn-save-api").addEventListener("click",()=>{applySettings();toast("API URL updated");});
-  $("btn-test-api").addEventListener("click",async()=>{
-    $("settings-status").innerHTML='<div class="muted">Testing <b>'+esc($("api-input").value.trim())+'</b>... <span class="spin"></span></div>';
-    API_BASE=$("api-input").value.trim().replace(/\/+$/,"")||API_BASE;
-    try{
-      const d=await api("/");
-      $("settings-status").innerHTML='<div class="ri" style="color:var(--ok)"><i class="fa-solid fa-circle-check"></i> Connected — <span class="mono-out" style="display:inline-block">'+esc(JSON.stringify(d))+ '</span></div>';
-      updateStatus();
-    }catch(e){
-      $("settings-status").innerHTML='<div class="ri err" style="color:#fda4af"><i class="fa-solid fa-circle-xmark"></i> '+esc(e.message)+'</div>';
-    }
-  });
-}
-function init(){
-  renderSuggestions();
-  renderChat();
-  updateStatus();
-  $("status-url").textContent=API_BASE;
-  $("api-input").value=API_BASE;
-  initSettings();
-  initTools();
-  document.querySelectorAll(".nav-item").forEach(n=>{
-    n.addEventListener("click",()=>switchView(n.dataset.view));
-  });
-  $("btn-settings").addEventListener("click",()=>switchView("settings"));
-  $("btn-newchat").addEventListener("click",()=>{
-    chatHistory=[];
-    renderChat();
-  });
-  $("chat-send").addEventListener("click",sendChat);
-  $("chat-input").addEventListener("keydown",e=>{
-    if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChat();}
-  });
-  $("chat-input").addEventListener("input",e=>{
-    e.target.style.height="auto";
-    e.target.style.height=Math.min(e.target.scrollHeight,140)+"px";
-  });
-  $("btn-code").addEventListener("click",genCode);
-  $("code-copy").addEventListener("click",()=>{const c=$("code-result").textContent;if(c&&c!=="Generating...")copyText(c);});
-  $("btn-generate").addEventListener("click",genProject);
-  $("btn-refresh-projects").addEventListener("click",loadProjects);
-  $("btn-back-projects").addEventListener("click",()=>{
-    $("projects-browser").style.display="";
-    $("project-detail").style.display="none";
-    loadProjects();
-  });
-  $("btn-save-file").addEventListener("click",saveFile);
-  $("btn-delete-file").addEventListener("click",deleteFile);
-  $("btn-copy-file").addEventListener("click",()=>copyText($("file-content").value));
-  $("btn-copy-path").addEventListener("click",()=>copyText(currentFile?currentFile.path:""));
-  $("file-content").addEventListener("input",()=>{
-    $("file-content").closest(".editor-shell").classList.add("dirty");
-  });
-  $("btn-proj-fix").addEventListener("click",()=>{runProjectAction("fix",currentProject?currentProject.path:"");});
-  $("btn-proj-improve").addEventListener("click",()=>{runProjectAction("improve",currentProject?currentProject.path:"");});
-  $("btn-proj-tests").addEventListener("click",()=>{runProjectAction("tests",currentProject?currentProject.path:"");});
-  $("btn-proj-push").addEventListener("click",()=>{runProjectAction("push",currentProject?currentProject.path:"");});
-  $("hamburger").addEventListener("click",openSidebar);
-  $("overlay").addEventListener("click",closeSidebar);
-}
-init();
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 </script>
+
 </body>
 </html>
